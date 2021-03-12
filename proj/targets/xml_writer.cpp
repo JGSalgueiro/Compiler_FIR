@@ -156,6 +156,13 @@ void fir::xml_writer::do_write_node(fir::write_node * const node, int lvl) {
   closeTag(node, lvl);
 }
 
+void fir::xml_writer::do_writeln_node(fir::writeln_node * const node, int lvl) {
+  ASSERT_SAFE_EXPRESSIONS;
+  openTag(node, lvl);
+  node->argument()->accept(this, lvl + 2);
+  closeTag(node, lvl);
+}
+
 //---------------------------------------------------------------------------
 
 void fir::xml_writer::do_read_node(fir::read_node * const node, int lvl) {
@@ -209,6 +216,12 @@ void fir::xml_writer::do_if_else_node(fir::if_else_node * const node, int lvl) {
 }
 
 
+//---------------------------------------------------------------------------
+
 void fir::xml_writer::do_leave_node(fir::leave_node *const node, int lvl) {
+  // EMPTY
+}
+
+void fir::xml_writer::do_return_node(fir::return_node *const node, int lvl) {
   // EMPTY
 }
