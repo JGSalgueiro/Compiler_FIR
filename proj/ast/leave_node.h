@@ -4,7 +4,6 @@
 #define __FIR_AST_LEAVE_NODE_H__
 
 #include <cdk/ast/basic_node.h>
-#include <cdk/ast/literal_node.h>
 #include <cdk/ast/expression_node.h>
 
 namespace fir {
