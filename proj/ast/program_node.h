@@ -1,5 +1,5 @@
-#ifndef __FIR_AST_PROGRAM_NODE_H__
-#define __FIR_AST_PROGRAM_NODE_H__
+#ifndef FIR_AST_PROGRAM_NODE_H
+#define FIR_AST_PROGRAM_NODE_H
 
 #include <cdk/ast/basic_node.h>
 

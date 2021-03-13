@@ -32,6 +32,10 @@ void fir::postfix_writer::do_leave_node(fir::leave_node *const node, int lvl) {
   //EMPTY TODO
 }
 
+void fir::postfix_writer::do_restart_node(fir::restart_node *const node, int lvl) {
+  //EMPTY TODO
+}
+
 void fir::postfix_writer::do_return_node(fir::return_node *const node, int lvl) {
   //EMPTY TODO
 }
