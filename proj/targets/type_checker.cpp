@@ -197,6 +197,10 @@ void fir::type_checker::do_return_node(fir::return_node *const node, int lvl) {
   // EMPTY
 }
 
+void fir::type_checker::do_block_node(fir::block_node *const node, int lvl) {
+  // EMPTY
+}
+
 void fir::type_checker::do_null_node(fir::null_node *const node, int lvl) {
   // EMPTY
 }
