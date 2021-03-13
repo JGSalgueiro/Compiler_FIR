@@ -36,6 +36,10 @@ void fir::postfix_writer::do_return_node(fir::return_node *const node, int lvl) 
   //EMPTY TODO
 }
 
+void fir::postfix_writer::do_null_node(fir::null_node *const node, int lvl) {
+  //EMPTY TODO
+}
+
 
 //---------------------------------------------------------------------------
 

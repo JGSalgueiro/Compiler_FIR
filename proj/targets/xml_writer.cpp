@@ -225,3 +225,7 @@ void fir::xml_writer::do_leave_node(fir::leave_node *const node, int lvl) {
 void fir::xml_writer::do_return_node(fir::return_node *const node, int lvl) {
   // EMPTY
 }
+
+void fir::xml_writer::do_null_node(fir::null_node *const node, int lvl) {
+  // EMPTY
+}
