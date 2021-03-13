@@ -4,7 +4,8 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/usr/include/cdk"
+                "/usr/include/cdk",
+                "${workspaceFolder}/proj"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
