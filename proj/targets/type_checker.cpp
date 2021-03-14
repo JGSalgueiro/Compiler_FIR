@@ -205,6 +205,10 @@ void fir::type_checker::do_sizeof_node(fir::sizeof_node *const node, int lvl) {
   // EMPTY
 }
 
+void fir::type_checker::do_left_index_node(fir::left_index_node *const node, int lvl) {
+  // EMPTY
+}
+
 void fir::type_checker::do_null_node(fir::null_node *const node, int lvl) {
   // EMPTY
 }

@@ -241,3 +241,7 @@ void fir::xml_writer::do_block_node(fir::block_node *const node, int lvl) {
 void fir::xml_writer::do_sizeof_node(fir::sizeof_node *const node, int lvl) {
   // EMPTY
 }
+
+void fir::xml_writer::do_left_index_node(fir::left_index_node *const node, int lvl) {
+  // EMPTY
+}
