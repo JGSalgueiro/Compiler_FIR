@@ -213,6 +213,15 @@ void fir::type_checker::do_null_node(fir::null_node *const node, int lvl) {
   // EMPTY
 }
 
+void fir::type_checker::do_identity_node(fir::identity_node *const node, int lvl) {
+  // EMPTY
+}
+
+void fir::type_checker::do_function_declaration_node(fir::function_declaration_node *const node, int lvl) {
+  // EMPTY
+}
+
+
 //----------------------------------------------------------------------------
 
 void fir::type_checker::do_while_node(fir::while_node *const node, int lvl) {

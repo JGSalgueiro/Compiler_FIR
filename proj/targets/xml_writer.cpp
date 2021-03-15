@@ -245,3 +245,11 @@ void fir::xml_writer::do_sizeof_node(fir::sizeof_node *const node, int lvl) {
 void fir::xml_writer::do_left_index_node(fir::left_index_node *const node, int lvl) {
   // EMPTY
 }
+
+void fir::xml_writer::do_identity_node(fir::identity_node *const node, int lvl) {
+  // EMPTY
+}
+
+void fir::xml_writer::do_function_declaration_node(fir::function_declaration_node *const node, int lvl) {
+  // EMPTY
+}

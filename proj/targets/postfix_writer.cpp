@@ -56,6 +56,15 @@ void fir::postfix_writer::do_left_index_node(fir::left_index_node *const node, i
   //EMPTY TODO
 }
 
+void fir::postfix_writer::do_identity_node(fir::identity_node *const node, int lvl) {
+  //EMPTY TODO
+}
+
+void fir::postfix_writer::do_function_declaration_node(fir::function_declaration_node *const node, int lvl) {
+  //EMPTY TODO
+}
+
+
 //---------------------------------------------------------------------------
 
 void fir::postfix_writer::do_sequence_node(cdk::sequence_node * const node, int lvl) {
