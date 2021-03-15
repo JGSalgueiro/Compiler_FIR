@@ -4,9 +4,7 @@
 #include <cdk/ast/expression_node.h>
 
 namespace fir{
-    /**
-     * Class for describing write nodes.
-     */
+
     class null_node: public cdk::expression_node {
 
     public:

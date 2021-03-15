@@ -4,7 +4,7 @@
 #include <cdk/ast/lvalue_node.h>
 #include "targets/basic_ast_visitor.h"
 
-// Used to indexing of pointers
+// Used to indexing pointers
 namespace fir {
 
   class left_index_node: public cdk::lvalue_node {
