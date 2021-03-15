@@ -253,3 +253,7 @@ void fir::xml_writer::do_identity_node(fir::identity_node *const node, int lvl) 
 void fir::xml_writer::do_function_declaration_node(fir::function_declaration_node *const node, int lvl) {
   // EMPTY
 }
+
+void fir::xml_writer::do_function_call_node(fir::function_call_node *const node, int lvl) {
+  // EMPTY
+}

@@ -1,5 +1,5 @@
-#ifndef __OG_AST_FUNCTION_DECLARATION_H__
-#define __OG_AST_FUNCTION_DECLARATION_H__
+#ifndef __FIR_AST_FUNCTION_DECLARATION_H__
+#define __FIR_AST_FUNCTION_DECLARATION_H__
 
 #include <string>
 #include <cdk/ast/sequence_node.h>

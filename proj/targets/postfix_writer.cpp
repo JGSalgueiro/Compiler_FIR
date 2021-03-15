@@ -64,6 +64,10 @@ void fir::postfix_writer::do_function_declaration_node(fir::function_declaration
   //EMPTY TODO
 }
 
+void fir::postfix_writer::do_function_call_node(fir::function_call_node *const node, int lvl) {
+  //EMPTY TODO
+}
+
 
 //---------------------------------------------------------------------------
 
