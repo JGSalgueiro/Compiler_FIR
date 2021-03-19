@@ -127,22 +127,8 @@ void fir::xml_writer::do_assignment_node(cdk::assignment_node * const node, int 
 
 //---------------------------------------------------------------------------
 
-void fir::xml_writer::do_program_node(fir::program_node * const node, int lvl) {
-  openTag(node, lvl);
-  node->statements()->accept(this, lvl + 4);
-  closeTag(node, lvl);
-}
-
-//---------------------------------------------------------------------------
 
 void fir::xml_writer::do_evaluation_node(fir::evaluation_node * const node, int lvl) {
-  ASSERT_SAFE_EXPRESSIONS;
-  openTag(node, lvl);
-  node->argument()->accept(this, lvl + 2);
-  closeTag(node, lvl);
-}
-
-void fir::xml_writer::do_print_node(fir::print_node * const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS;
   openTag(node, lvl);
   node->argument()->accept(this, lvl + 2);
@@ -255,5 +241,17 @@ void fir::xml_writer::do_function_declaration_node(fir::function_declaration_nod
 }
 
 void fir::xml_writer::do_function_call_node(fir::function_call_node *const node, int lvl) {
+  // EMPTY
+}
+
+void fir::xml_writer::do_variable_declaration_node(fir::variable_declaration_node *const node, int lvl) {
+  // EMPTY
+}
+
+void fir::xml_writer::do_memory_node(fir::memory_node *const node, int lvl) {
+  // EMPTY
+}
+
+void fir::xml_writer::do_power_node(fir::power_node *const node, int lvl) {
   // EMPTY
 }

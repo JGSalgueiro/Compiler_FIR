@@ -60,6 +60,14 @@ void fir::postfix_writer::do_identity_node(fir::identity_node *const node, int l
   //EMPTY TODO
 }
 
+void fir::postfix_writer::do_evaluation_node(fir::evaluation_node *const node, int lvl) {
+  //EMPTY TODO
+}
+
+void fir::postfix_writer::do_memory_node(fir::memory_node *const node, int lvl) {
+  //EMPTY TODO
+}
+
 void fir::postfix_writer::do_function_declaration_node(fir::function_declaration_node *const node, int lvl) {
   //EMPTY TODO
 }
@@ -68,6 +76,13 @@ void fir::postfix_writer::do_function_call_node(fir::function_call_node *const n
   //EMPTY TODO
 }
 
+void fir::postfix_writer::do_variable_declaration_node(fir::variable_declaration_node *const node, int lvl) {
+  //EMPTY TODO
+}
+
+void fir::postfix_writer::do_power_node(fir::power_node *const node, int lvl) {
+  //EMPTY TODO
+}
 
 //---------------------------------------------------------------------------
 
@@ -208,64 +223,9 @@ void fir::postfix_writer::do_assignment_node(cdk::assignment_node * const node, 
 
 //---------------------------------------------------------------------------
 
-void fir::postfix_writer::do_program_node(fir::program_node * const node, int lvl) {
-  // Note that Simple doesn't have functions. Thus, it doesn't need
-  // a function node. However, it must start in the main function.
-  // The ProgramNode (representing the whole program) doubles as a
-  // main function node.
 
-  // generate the main function (RTS mandates that its name be "_main")
-  _pf.TEXT();
-  _pf.ALIGN();
-  _pf.GLOBAL("_main", _pf.FUNC());
-  _pf.LABEL("_main");
-  _pf.ENTER(0);  // Simple doesn't implement local variables
 
-  node->statements()->accept(this, lvl);
 
-  // end the main function
-  _pf.INT(0);
-  _pf.STFVAL32();
-  _pf.LEAVE();
-  _pf.RET();
-
-  // these are just a few library function imports
-  _pf.EXTERN("readi");
-  _pf.EXTERN("printi");
-  _pf.EXTERN("prints");
-  _pf.EXTERN("println");
-}
-
-//---------------------------------------------------------------------------
-
-void fir::postfix_writer::do_evaluation_node(fir::evaluation_node * const node, int lvl) {
-  ASSERT_SAFE_EXPRESSIONS;
-  node->argument()->accept(this, lvl); // determine the value
-  if (node->argument()->is_typed(cdk::TYPE_INT)) {
-    _pf.TRASH(4); // delete the evaluated value
-  } else if (node->argument()->is_typed(cdk::TYPE_STRING)) {
-    _pf.TRASH(4); // delete the evaluated value's address
-  } else {
-    std::cerr << "ERROR: CANNOT HAPPEN!" << std::endl;
-    exit(1);
-  }
-}
-
-void fir::postfix_writer::do_print_node(fir::print_node * const node, int lvl) {
-  ASSERT_SAFE_EXPRESSIONS;
-  node->argument()->accept(this, lvl); // determine the value to print
-  if (node->argument()->is_typed(cdk::TYPE_INT)) {
-    _pf.CALL("printi");
-    _pf.TRASH(4); // delete the printed value
-  } else if (node->argument()->is_typed(cdk::TYPE_STRING)) {
-    _pf.CALL("prints");
-    _pf.TRASH(4); // delete the printed value's address
-  } else {
-    std::cerr << "ERROR: CANNOT HAPPEN!" << std::endl;
-    exit(1);
-  }
-  _pf.CALL("println"); // print a newline
-}
 
 void fir::postfix_writer::do_write_node(fir::write_node * const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS;

@@ -23,9 +23,7 @@ namespace fir {
     function_declaration_node(int lineno, int qualifier,  cdk::basic_type *type, std::string &identifier,
                              cdk::sequence_node *arguments, block_node *block) :
         cdk::typed_node(lineno), _qualifier(qualifier), _identifier(identifier), _arguments(arguments), _block(block) {
-
     }
-
 
   public:
     int qualifier() {
@@ -44,7 +42,6 @@ namespace fir {
     void accept(basic_ast_visitor *sp, int level) {
       sp->do_function_declaration_node(this, level);
     }
-
   };
 
 }//fir

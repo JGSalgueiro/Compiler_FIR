@@ -153,15 +153,7 @@ void fir::type_checker::do_assignment_node(cdk::assignment_node *const node, int
 
 //---------------------------------------------------------------------------
 
-void fir::type_checker::do_program_node(fir::program_node *const node, int lvl) {
-  // EMPTY
-}
-
 void fir::type_checker::do_evaluation_node(fir::evaluation_node *const node, int lvl) {
-  node->argument()->accept(this, lvl + 2);
-}
-
-void fir::type_checker::do_print_node(fir::print_node *const node, int lvl) {
   node->argument()->accept(this, lvl + 2);
 }
 
@@ -225,7 +217,17 @@ void fir::type_checker::do_function_call_node(fir::function_call_node *const nod
   // EMPTY
 }
 
+void fir::type_checker::do_variable_declaration_node(fir::variable_declaration_node *const node, int lvl) {
+  // EMPTY
+}
 
+void fir::type_checker::do_memory_node(fir::memory_node *const node, int lvl) {
+  // EMPTY
+}
+
+void fir::type_checker::do_power_node(fir::power_node *const node, int lvl) {
+  // EMPTY
+}
 //----------------------------------------------------------------------------
 
 void fir::type_checker::do_while_node(fir::while_node *const node, int lvl) {
