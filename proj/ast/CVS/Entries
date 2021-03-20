@@ -1,9 +1,22 @@
-/.cvsignore/1.1/Thu Mar  4 19:31:49 2021//
-/evaluation_node.h/1.1/Thu Mar  4 19:31:15 2021//
-/if_else_node.h/1.1/Thu Mar  4 19:31:15 2021//
-/if_node.h/1.1/Thu Mar  4 19:31:15 2021//
-/print_node.h/1.1/Thu Mar  4 19:31:15 2021//
-/program_node.h/1.1/Thu Mar  4 19:31:15 2021//
-/read_node.h/1.1/Thu Mar  4 19:31:15 2021//
-/while_node.h/1.1/Thu Mar  4 19:31:15 2021//
-D
+/.cvsignore/1.1/Sat Mar 20 11:34:25 2021//
+/if_else_node.h/1.1/Sat Mar 20 11:34:25 2021//
+/if_node.h/1.1/Sat Mar 20 11:34:25 2021//
+/read_node.h/1.1/Sat Mar 20 11:34:25 2021//
+/while_node.h/1.1/Sat Mar 20 11:34:25 2021//
+/evaluation_node.h/1.1/Sat Mar 20 11:53:14 2021//
+D/CVS////
+/block_node.h/1.1/Sat Mar 20 11:19:39 2021//
+/function_call_node.h/1.1/Sat Mar 20 11:34:25 2021//
+/function_declaration_node.h/1.1/Sat Mar 20 11:34:25 2021//
+/identity_node.h/1.1/Sat Mar 20 11:34:25 2021//
+/leave_node.h/1.1/Sat Mar 20 11:34:25 2021//
+/left_index_node.h/1.1/Sat Mar 20 11:34:25 2021//
+/memory_node.h/1.1/Sat Mar 20 11:34:25 2021//
+/null_node.h/1.1/Sat Mar 20 11:34:25 2021//
+/power_node.h/1.1/Sat Mar 20 11:34:25 2021//
+/restart_node.h/1.1/Sat Mar 20 11:34:25 2021//
+/return_node.h/1.1/Sat Mar 20 11:34:25 2021//
+/sizeof_node.h/1.1/Sat Mar 20 11:34:25 2021//
+/variable_declaration_node.h/1.1/Sat Mar 20 11:34:25 2021//
+/write_node.h/1.1/Sat Mar 20 11:34:25 2021//
+/writeln_node.h/1.1/Sat Mar 20 11:34:25 2021//
