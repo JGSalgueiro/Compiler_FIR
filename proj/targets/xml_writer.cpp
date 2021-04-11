@@ -252,6 +252,6 @@ void fir::xml_writer::do_memory_node(fir::memory_node *const node, int lvl) {
   // EMPTY
 }
 
-void fir::xml_writer::do_power_node(fir::power_node *const node, int lvl) {
+void fir::xml_writer::do_adress_of_node(fir::adress_of_node *const node, int lvl) {
   // EMPTY
 }
