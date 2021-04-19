@@ -225,11 +225,7 @@ void fir::type_checker::do_memory_node(fir::memory_node *const node, int lvl) {
   // EMPTY
 }
 
-void fir::type_checker::do_memory_node(fir::memory_node *const node, int lvl) {
-  // EMPTY
-}
-
-void fir::type_checker::adress_of_node(fir::adress_of_node *const node, int lvl) {
+void fir::type_checker::do_adress_of_node(fir::adress_of_node *const node, int lvl) {
   // EMPTY
 }
 

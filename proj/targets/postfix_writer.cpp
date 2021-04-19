@@ -80,7 +80,7 @@ void fir::postfix_writer::do_variable_declaration_node(fir::variable_declaration
   //EMPTY TODO
 }
 
-void fir::postfix_writer::do_adress_of_node(fir::variable_declaration_node *const node, int lvl) {
+void fir::postfix_writer::do_adress_of_node(fir::adress_of_node *const node, int lvl) {
   //EMPTY TODO
 }
 
