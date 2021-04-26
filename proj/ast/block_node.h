@@ -10,7 +10,7 @@ namespace fir {
     cdk::sequence_node *_instructions ,*_declarations;
 
   public:
-    inline block_node(int lineno, cdk::sequence_node *instructions,cdk::sequence_node *declarations) :
+    inline block_node(int lineno,cdk::sequence_node *declarations, cdk::sequence_node *instructions) :
         cdk::basic_node(lineno), _instructions(instructions), _declarations(declarations) {
     }
 

@@ -158,11 +158,7 @@ void fir::type_checker::do_evaluation_node(fir::evaluation_node *const node, int
 }
 
 void fir::type_checker::do_write_node(fir::write_node *const node, int lvl) {
-  node->argument()->accept(this, lvl + 2);
-}
-
-void fir::type_checker::do_writeln_node(fir::writeln_node *const node, int lvl) {
-  node->argument()->accept(this, lvl + 2);
+  // EMPTY
 }
 
 //---------------------------------------------------------------------------

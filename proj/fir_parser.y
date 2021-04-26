@@ -30,14 +30,18 @@
   cdk::sequence_node   *sequence;
   cdk::expression_node *expression; /* expression nodes */
   cdk::lvalue_node     *lvalue;
+  fir::block_node      *block;
 };
 
 %token <i> tINTEGER
 %token <s> tIDENTIFIER tSTRING
-%token tWHILE tIF tPRINT tREAD tBEGIN tEND
+%token tWHILE tIF tPRINT tREAD tBEGIN tEND tDO tFINALLY
 
 %nonassoc tIFX
-%nonassoc tELSE
+%nonassoc tIF
+%nonassoc tTHEN
+%nonassoc tELSE 
+%nonassoc tELIF
 
 %right '='
 %left tGE tLE tEQ tNE '>' '<'
@@ -57,31 +61,34 @@
 
 
 list : stmt	     { $$ = new cdk::sequence_node(LINE, $1); }
-	   | list stmt { $$ = new cdk::sequence_node(LINE, $2, $1); }
-	   ;
-
-stmt : expr ';'                         { $$ = new fir::evaluation_node(LINE, $1); }
-     | tREAD lval ';'                   { $$ = new fir::read_node(LINE, $2); }
-     | tWHILE '(' expr ')' stmt         { $$ = new fir::while_node(LINE, $3, $5); }
-     | tIF '(' expr ')' stmt %prec tIFX { $$ = new fir::if_node(LINE, $3, $5); }
-     | tIF '(' expr ')' stmt tELSE stmt { $$ = new fir::if_else_node(LINE, $3, $5, $7); }
-     | '{' list '}'                     { $$ = $2; }
+     | list stmt    { $$ = new cdk::sequence_node(LINE, $2, $1); }
      ;
 
+stmt : expr ';'                            { $$ = new fir::evaluation_node(LINE, $1); }
+     | tREAD lval ';'                      { $$ = new fir::read_node(LINE, $2); }
+     | tWHILE expr tDO stmt                { $$ = new fir::while_node(LINE,$2,$4);}
+     | tWHILE expr tDO stmt tFINALLY stmt  { $$ = new fir::while_node(LINE,$2,$4,$6);}
+     | tIF expr tTHEN stmt                 { $$ = new fir::if_node(LINE, $2, $4);}
+     | tIF expr tTHEN stmt tELSE stmt      { $$ = new fir::if_else_node(LINE, $2, $4, $6);}
+     | tPRINT expr ';'                     { $$ = new fir::write_node(LINE, $2, false); }
+     | '{' list '}'                        { $$ = $2; }
+     ;
+
+
 expr : tINTEGER                { $$ = new cdk::integer_node(LINE, $1); }
-	   | tSTRING                 { $$ = new cdk::string_node(LINE, $1); }
+	| tSTRING                 { $$ = new cdk::string_node(LINE, $1); }
      | '-' expr %prec tUNARY   { $$ = new cdk::neg_node(LINE, $2); }
-     | expr '+' expr	         { $$ = new cdk::add_node(LINE, $1, $3); }
-     | expr '-' expr	         { $$ = new cdk::sub_node(LINE, $1, $3); }
-     | expr '*' expr	         { $$ = new cdk::mul_node(LINE, $1, $3); }
-     | expr '/' expr	         { $$ = new cdk::div_node(LINE, $1, $3); }
-     | expr '%' expr	         { $$ = new cdk::mod_node(LINE, $1, $3); }
-     | expr '<' expr	         { $$ = new cdk::lt_node(LINE, $1, $3); }
-     | expr '>' expr	         { $$ = new cdk::gt_node(LINE, $1, $3); }
-     | expr tGE expr	         { $$ = new cdk::ge_node(LINE, $1, $3); }
+     | expr '+' expr	      { $$ = new cdk::add_node(LINE, $1, $3); }
+     | expr '-' expr	      { $$ = new cdk::sub_node(LINE, $1, $3); }
+     | expr '*' expr	      { $$ = new cdk::mul_node(LINE, $1, $3); }
+     | expr '/' expr	      { $$ = new cdk::div_node(LINE, $1, $3); }
+     | expr '%' expr	      { $$ = new cdk::mod_node(LINE, $1, $3); }
+     | expr '<' expr	      { $$ = new cdk::lt_node(LINE, $1, $3); }
+     | expr '>' expr	      { $$ = new cdk::gt_node(LINE, $1, $3); }
+     | expr tGE expr	      { $$ = new cdk::ge_node(LINE, $1, $3); }
      | expr tLE expr           { $$ = new cdk::le_node(LINE, $1, $3); }
-     | expr tNE expr	         { $$ = new cdk::ne_node(LINE, $1, $3); }
-     | expr tEQ expr	         { $$ = new cdk::eq_node(LINE, $1, $3); }
+     | expr tNE expr	      { $$ = new cdk::ne_node(LINE, $1, $3); }
+     | expr tEQ expr	      { $$ = new cdk::eq_node(LINE, $1, $3); }
      | '(' expr ')'            { $$ = $2; }
      | lval                    { $$ = new cdk::rvalue_node(LINE, $1); }  //FIXME
      | lval '=' expr           { $$ = new cdk::assignment_node(LINE, $1, $3); }

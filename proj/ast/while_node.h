@@ -11,10 +11,16 @@ namespace fir {
   class while_node: public cdk::basic_node {
     cdk::expression_node *_condition;
     cdk::basic_node *_block;
+    cdk::basic_node *_finally;
+    // Finally is optional
 
   public:
     inline while_node(int lineno, cdk::expression_node *condition, cdk::basic_node *block) :
-        basic_node(lineno), _condition(condition), _block(block) {
+        basic_node(lineno), _condition(condition), _block(block) { //TODO FIXNOW initialize
+    }
+
+    inline while_node(int lineno, cdk::expression_node *condition, cdk::basic_node *block, cdk::basic_node *finally) :
+    basic_node(lineno), _condition(condition), _block(block), _finally(finally) {
     }
 
   public:
@@ -24,6 +30,9 @@ namespace fir {
     inline cdk::basic_node *block() {
       return _block;
     }
+    inline cdk::basic_node *finally() {
+      return _finally;
+    }
 
     void accept(basic_ast_visitor *sp, int level) {
       sp->do_while_node(this, level);
@@ -31,6 +40,6 @@ namespace fir {
 
   };
 
-} // fir
+}
 
 #endif

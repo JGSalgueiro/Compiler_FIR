@@ -1,25 +1,26 @@
 #ifndef __FIR_AST_RETURN_NODE_H__
 #define __FIR_AST_RETURN_NODE_H__
 
+#include <cdk/ast/expression_node.h>
 
 namespace fir {
 
   /**
-   * Class for describing the function's return node.
+   * Class for describing read nodes.
    */
   class return_node: public cdk::basic_node {
-    cdk::expression_node *_retVal;
+    cdk::expression_node *_retval;
 
   public:
-    return_node(int lineno, cdk::expression_node * retVal):
-    cdk::basic_node(lineno), _retVal(retVal) {
-  }
-  public:
-    cdk::expression_node *retVal() {
-      return _retVal;
+    inline return_node(int lineno, cdk::expression_node *retval) :
+        cdk::basic_node(lineno), _retval(retval) {
     }
 
   public:
+    inline cdk::expression_node *retval() {
+      return _retval;
+    }
+
     void accept(basic_ast_visitor *sp, int level) {
       sp->do_return_node(this, level);
     }

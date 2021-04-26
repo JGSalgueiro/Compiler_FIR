@@ -27,7 +27,10 @@
 "print"                return tPRINT; 
 "read"                 return tREAD; 
 "begin"                return tBEGIN; 
-"end"                  return tEND; 
+"end"                  return tEND;
+"finally"              return tFINALLY; 
+"do"                   return tDO; 
+"then"                 return tTHEN;  
 
 [A-Za-z][A-Za-z0-9_]*  yylval.s = new std::string(yytext); return tIDENTIFIER;
 

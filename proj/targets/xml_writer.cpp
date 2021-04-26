@@ -135,19 +135,10 @@ void fir::xml_writer::do_evaluation_node(fir::evaluation_node * const node, int 
   closeTag(node, lvl);
 }
 
-void fir::xml_writer::do_write_node(fir::write_node * const node, int lvl) {
-  ASSERT_SAFE_EXPRESSIONS;
-  openTag(node, lvl);
-  node->argument()->accept(this, lvl + 2);
-  closeTag(node, lvl);
+void fir::xml_writer::do_write_node(fir::write_node *const node, int lvl) {
+  // EMPTY
 }
 
-void fir::xml_writer::do_writeln_node(fir::writeln_node * const node, int lvl) {
-  ASSERT_SAFE_EXPRESSIONS;
-  openTag(node, lvl);
-  node->argument()->accept(this, lvl + 2);
-  closeTag(node, lvl);
-}
 
 //---------------------------------------------------------------------------
 
