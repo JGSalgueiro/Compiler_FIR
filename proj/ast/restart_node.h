@@ -17,6 +17,9 @@ namespace fir {
         inline restart_node(int lineno, cdk::integer_node *integ) :
             cdk::basic_node(lineno) , _integ(integ){
         }
+        inline restart_node(int lineno) :
+            cdk::basic_node(lineno){
+        }
 
     public:
         inline cdk::integer_node *integ(){
