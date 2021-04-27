@@ -231,6 +231,14 @@ void fir::xml_writer::do_function_declaration_node(fir::function_declaration_nod
   // EMPTY
 }
 
+void fir::xml_writer::do_body_node(fir::body_node *const node, int lvl) {
+  // EMPTY
+}
+
+void fir::xml_writer::do_function_definition_node(fir::function_definition_node *const node, int lvl) {
+  // EMPTY
+}
+
 void fir::xml_writer::do_function_call_node(fir::function_call_node *const node, int lvl) {
   // EMPTY
 }

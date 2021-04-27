@@ -12,6 +12,7 @@ class block_node;
 class evaluation_node;
 class function_call_node;
 class function_declaration_node;
+class function_definition_node;
 class identity_node;
 class if_else_node;
 class if_node;
@@ -40,6 +41,7 @@ class write_node;
 #include "ast/evaluation_node.h"
 #include "ast/function_call_node.h"
 #include "ast/function_declaration_node.h"
+#include "ast/function_definition_node.h"
 #include "ast/identity_node.h"
 #include "ast/if_else_node.h"
 #include "ast/if_node.h"

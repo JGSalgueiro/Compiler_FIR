@@ -76,11 +76,19 @@ void fir::postfix_writer::do_function_call_node(fir::function_call_node *const n
   //EMPTY TODO
 }
 
+void fir::postfix_writer::do_function_definition_node(fir::function_definition_node *const node, int lvl) {
+  //EMPTY TODO
+}
+
 void fir::postfix_writer::do_variable_declaration_node(fir::variable_declaration_node *const node, int lvl) {
   //EMPTY TODO
 }
 
 void fir::postfix_writer::do_adress_of_node(fir::adress_of_node *const node, int lvl) {
+  //EMPTY TODO
+}
+
+void fir::postfix_writer::do_body_node(fir::body_node *const node, int lvl) {
   //EMPTY TODO
 }
 
