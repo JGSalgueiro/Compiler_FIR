@@ -4,10 +4,6 @@
 #include <cdk/ast/expression_node.h>
 
 namespace fir {
-
-  /**
-   * Class for describing evaluation nodes.
-   */
   class evaluation_node: public cdk::basic_node {
     cdk::expression_node *_argument;
 
@@ -26,7 +22,6 @@ namespace fir {
     }
 
   };
-
 } // fir
 
 #endif

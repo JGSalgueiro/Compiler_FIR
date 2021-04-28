@@ -6,9 +6,11 @@
 #ifdef __PURE_VIRTUAL_DECLARATIONS_ONLY__
   virtual void do_adress_of_node(fir::adress_of_node *const node, int lvl) = 0;
   virtual void do_block_node(fir::block_node *const node, int lvl) = 0;
+  virtual void do_body_node(fir::body_node *const node, int lvl) = 0;
   virtual void do_evaluation_node(fir::evaluation_node *const node, int lvl) = 0;
   virtual void do_function_call_node(fir::function_call_node *const node, int lvl) = 0;
   virtual void do_function_declaration_node(fir::function_declaration_node *const node, int lvl) = 0;
+  virtual void do_function_definition_node(fir::function_definition_node *const node, int lvl) = 0;
   virtual void do_identity_node(fir::identity_node *const node, int lvl) = 0;
   virtual void do_if_else_node(fir::if_else_node *const node, int lvl) = 0;
   virtual void do_if_node(fir::if_node *const node, int lvl) = 0;
@@ -27,9 +29,11 @@
 #else
   void do_adress_of_node(fir::adress_of_node *const node, int lvl);
   void do_block_node(fir::block_node *const node, int lvl);
+  void do_body_node(fir::body_node *const node, int lvl);
   void do_evaluation_node(fir::evaluation_node *const node, int lvl);
   void do_function_call_node(fir::function_call_node *const node, int lvl);
   void do_function_declaration_node(fir::function_declaration_node *const node, int lvl);
+  void do_function_definition_node(fir::function_definition_node *const node, int lvl);
   void do_identity_node(fir::identity_node *const node, int lvl);
   void do_if_else_node(fir::if_else_node *const node, int lvl);
   void do_if_node(fir::if_node *const node, int lvl);

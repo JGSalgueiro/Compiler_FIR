@@ -6,22 +6,22 @@
 //---------------------------------------------------------------------------
 
 void fir::xml_writer::do_nil_node(cdk::nil_node * const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 void fir::xml_writer::do_data_node(cdk::data_node * const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 void fir::xml_writer::do_double_node(cdk::double_node * const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 void fir::xml_writer::do_not_node(cdk::not_node * const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 void fir::xml_writer::do_and_node(cdk::and_node * const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 void fir::xml_writer::do_or_node(cdk::or_node * const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 //---------------------------------------------------------------------------
@@ -136,7 +136,7 @@ void fir::xml_writer::do_evaluation_node(fir::evaluation_node * const node, int 
 }
 
 void fir::xml_writer::do_write_node(fir::write_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 
@@ -196,61 +196,61 @@ void fir::xml_writer::do_if_else_node(fir::if_else_node * const node, int lvl) {
 //---------------------------------------------------------------------------
 
 void fir::xml_writer::do_leave_node(fir::leave_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::xml_writer::do_restart_node(fir::restart_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::xml_writer::do_return_node(fir::return_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::xml_writer::do_null_node(fir::null_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::xml_writer::do_block_node(fir::block_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::xml_writer::do_sizeof_node(fir::sizeof_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::xml_writer::do_left_index_node(fir::left_index_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::xml_writer::do_identity_node(fir::identity_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::xml_writer::do_function_declaration_node(fir::function_declaration_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::xml_writer::do_body_node(fir::body_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::xml_writer::do_function_definition_node(fir::function_definition_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::xml_writer::do_function_call_node(fir::function_call_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::xml_writer::do_variable_declaration_node(fir::variable_declaration_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::xml_writer::do_memory_node(fir::memory_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::xml_writer::do_adress_of_node(fir::adress_of_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }

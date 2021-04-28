@@ -9,19 +9,19 @@ namespace fir {
    * Class for describing write nodes.
    */
   class write_node: public cdk::basic_node {
-    cdk::expression_node *_argument;
+    cdk::sequence_node *_argument;
     /** write and writeln keyboards are represented on the same node
      * is_writeln indicates the keyword present on the source code
      */
     bool _isWriteln;
 
   public:
-    inline write_node(int lineno, cdk::expression_node *argument, bool isWriteln) :
+    inline write_node(int lineno, cdk::sequence_node *argument, bool isWriteln) :
         cdk::basic_node(lineno), _argument(argument), _isWriteln(isWriteln) {
     }
 
   public:
-    inline cdk::expression_node *argument() {
+    inline cdk::sequence_node *argument() {
       return _argument;
     }
 

@@ -8,28 +8,28 @@
 //---------------------------------------------------------------------------
 
 void fir::type_checker::do_sequence_node(cdk::sequence_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 //---------------------------------------------------------------------------
 
 void fir::type_checker::do_nil_node(cdk::nil_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 void fir::type_checker::do_data_node(cdk::data_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 void fir::type_checker::do_double_node(cdk::double_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 void fir::type_checker::do_not_node(cdk::not_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 void fir::type_checker::do_and_node(cdk::and_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 void fir::type_checker::do_or_node(cdk::or_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 //---------------------------------------------------------------------------
@@ -158,7 +158,7 @@ void fir::type_checker::do_evaluation_node(fir::evaluation_node *const node, int
 }
 
 void fir::type_checker::do_write_node(fir::write_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 //---------------------------------------------------------------------------
@@ -174,59 +174,63 @@ void fir::type_checker::do_read_node(fir::read_node *const node, int lvl) {
 //---------------------------------------------------------------------------
 
 void fir::type_checker::do_leave_node(fir::leave_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::type_checker::do_restart_node(fir::restart_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::type_checker::do_return_node(fir::return_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::type_checker::do_block_node(fir::block_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::type_checker::do_sizeof_node(fir::sizeof_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::type_checker::do_left_index_node(fir::left_index_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::type_checker::do_null_node(fir::null_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::type_checker::do_identity_node(fir::identity_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::type_checker::do_function_declaration_node(fir::function_declaration_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
+}
+
+void fir::type_checker::do_body_node(fir::body_node *const node, int lvl) {
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::type_checker::do_function_definition_node(fir::function_definition_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::type_checker::do_function_call_node(fir::function_call_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::type_checker::do_variable_declaration_node(fir::variable_declaration_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::type_checker::do_memory_node(fir::memory_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 void fir::type_checker::do_adress_of_node(fir::adress_of_node *const node, int lvl) {
-  // EMPTY
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 //----------------------------------------------------------------------------

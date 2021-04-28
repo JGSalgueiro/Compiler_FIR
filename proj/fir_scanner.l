@@ -27,122 +27,137 @@ IDENTIFIER   {LETTER}({LETTER}|[[:digit:]])*
 %x X_STRING  X_BACKSLASH 
 %x X_OCTAL
 %%
-  /* +======+============================+*/
-  /* | 2.2  |  COMMENTS                  |*/
-  /* +======+============================+*/
-"!!".*$                   ; /*ignores*/
-"(*"                      yy_push_state(X_COMMENT);
-<X_COMMENT>"*)"           yy_pop_state();
-<X_COMMENT>.|"~n"         ; /*ignores*/
 
+  /* ====================================================================== */
+  /* ====[                      COMMENTS                              ]==== */
+  /* ====================================================================== */
 
-  /* +======+============================+*/
-  /* | 1.1  |  Tipos de dados            |*/
-  /* | 1.1  |  Null pointers             |*/
-  /* +======+============================+*/
-"void" 				      return tVOID;
-"int"                     return tTYPE_INT;
-"float"                   return tTYPE_FLOAT;
-"string"                  return tTYPE_STRING;
-"null"			          return tNULL;
-"sizeof"                  return tSIZEOF;
+"!!".*$                      ; /* ignore comments */
 
-  /* +======+============================+*/
-  /* | 3.4.2|  Símbolos globais          |*/
-  /* +======+============================+*/
-"?"                       return tEXTERNAL;
-"*"                       return tPUBLIC;
+"(*"                          yy_push_state(X_COMMENT);
+<X_COMMENT>"*)"               yy_pop_state();
+<X_COMMENT>.|"~n"               ; /* ignore content */
 
-  /* +======+============================+*/
-  /* | 5.5  |  Instrução condicional     |*/
-  /* +======+============================+*/
-"if"                      return tIF; 
-"else"                    return tELSE; 
-"then"				      return tTHEN;
+  /* ====================================================================== */
+  /* ====[                  Tipos de dados                            ]==== */
+  /* ====[                  Null pointers                             ]==== */
+  /* ====================================================================== */
 
-  /* +======+============================+*/
-  /* | 5.5  |  Instrução de iteração     |*/
-  /* | 5.5  |  Instrução de terminação   |*/
-  /* | 5.5  |  Instrução de continuação  |*/
-  /* +======+============================+*/
-"while"                   return tWHILE;
-"do"                      return tDO;                           
-"leave"			   	      return tLEAVE;
-"restart"			      return tRESTART;
-"return"			      return tRETURN;
-"finally"                 return tFINALLY;
+"void" 				     return tVOID;
+"int"                    return tTYPE_INT;
+"float"                  return tTYPE_FLOAT;
+"string"                 return tTYPE_STRING;
 
-  /* +======+============================+*/
-  /* | 6    |  Operadores de expressões  |*/
-  /* +======+============================+*/
-[\[\](),/]                return *yytext;
-[-+/%=]                   return *yytext;
-"=="                      return tEQ;
-"!="                      return tNE;
-"<="                      return tLE;
-">="                      return tGE;
-"&&"                      return tAND;
-"||"                      return tOR;
+"null"			         return tNULL;
+"sizeof"                 return tSIZEOF;
 
-  /* +======+=============================+*/
-  /* | 3    |  Delimitadores e separadores|*/
-  /* | 4.3  |  Corpo (de função)          |*/
-  /* | 5.3  |  Instrução de retorno       |*/
-  /* +======+=============================+*/
-[#\[\]{};:/,]             return *yytext;
-"@"                       return tREAD;
-"return"                  return tRETURN;
-"write"                   return tWRITE;
-"writeln"                 return tWRITELN;
+  /* ====================================================================== */
+  /* ====[                  Símbolos globais                          ]==== */
+  /* ====================================================================== */
 
-  /* +======+============================+*/
-  /* | 2.7.1|  Inteiros                  |*/
-  /* +======+============================+*/
-<X_OCTAL>[[:digit:]]+     {yylval.i = strtoul(yytext, NULL, 8); yy_pop_state(); return tINTEGER; }
-<X_OCTAL>.|\n             std::cerr << "WARNING: line " << lineno() << ": bad Octal data!" << std::endl; exit(1);
-{INT}                     yylval.i = strtoul(yytext, NULL, 10); return tINTEGER;
+"?"                      return tEXTERNAL;
+"*"                     return tPUBLIC;
 
-  /* +======+============================+*/
-  /* | 2.7.2|  Floats                    |*/
-  /* +======+============================+*/
+  /* ====================================================================== */
+  /* ====[                 Instrução condicional                      ]==== */
+  /* ====================================================================== */
+
+"if"                          return tIF; 
+"else"                        return tELSE; 
+"then"				          return tTHEN;
+
+  /* ====================================================================== */
+  /* ====[                 Instrução de iteração                      ]==== */
+  /* ====[                 Instrução de terminação                    ]==== */
+  /* ====[                 Instrução de continuação                   ]==== */
+  /* ====================================================================== */
+
+"while"                       return tWHILE;
+"do"                          return tDO;                           
+"leave"			   	          return tLEAVE;
+"restart"			          return tRESTART;
+"return"			          return tRETURN;
+"finally"                     return tFINALLY;
+
+  /* ====================================================================== */
+  /* ====[                 6 - Operadores de expressões               ]==== */
+  /* ====================================================================== */
+
+[\[\](),/]       return *yytext;
+[-+/%=]        return *yytext;
+"=="                   return tEQ;
+"!="                   return tNE;
+"<="                   return tLE;
+">="                   return tGE;
+"&&"                   return tAND;
+"||"                   return tOR;
+
+  /* ====================================================================== */
+  /* ====[              3   - Delimitadores e separadores             ]==== */
+  /* ====[              4.3 - Corpo (de função)                       ]==== */
+  /* ====[                 5.3 - Instrução de retorno                 ]==== */
+  /* ====================================================================== */
+
+[#\[\]{};:/,]                return *yytext;
+"return"                       return tRETURN;
+"write"                        return tWRITE;
+"writeln"                      return tWRITELN;
+
+  /* ====================================================================== */
+  /* ====[                   2.7.1 - inteiros                         ]==== */
+  /* ====================================================================== */
+
+<X_OCTAL>[[:digit:]]+      { yylval.i = strtoul(yytext, NULL, 8); yy_pop_state(); return tINTEGER; }
+<X_OCTAL>.|\n               std::cerr << "WARNING: line " << lineno() << ": bad Octal data!" << std::endl; exit(1);
+
+{INT}                  yylval.i = strtoul(yytext, NULL, 10); return tINTEGER;
+
+  /* ====================================================================== */
+  /* ====[                   2.7.2 - float                            ]==== */
+  /* ====================================================================== */
+
 ([0-9]*\.[0-9]+|[0-9]+\.[0-9]*)([eE][-+]?[0-9]+)? { yylval.d = strtod(yytext, NULL); return tFLOAT; }
 
-  /* +======+============================+*/
-  /* | 2.6  |  Identificadores (nomes)   |*/
-  /* +======+============================+*/
-{IDENTIFIER}  yylval.s = new std::string(yytext); return tIDENTIFIER;~
+  /* ====================================================================== */
+  /* ====[                2.6 - Identificadores (nomes)               ]==== */
+  /* ====================================================================== */
 
-  /* +======+============================+*/
-  /* | 2.7.3|  Cadeias de caracteres     |*/
-  /* +======+============================+*/
-"~'"                      yy_push_state(X_STRING);
-<X_STRING>"~~"            yy_push_state(X_BACKSLASH);
-<X_STRING>"~'"            {
-                           yylval.s = new std::string(strlit.str());
-                           strlit.str("");
-                           yy_pop_state();
-                           return tSTRING;
-                          }
-<X_STRING>.               strlit << *yytext;
-<X_BACKSLASH>n            strlit << "~n"; yy_pop_state();
-<X_BACKSLASH>r            strlit << "~r"; yy_pop_state();
-<X_BACKSLASH>t            strlit << "~t"; yy_pop_state();
-<X_BACKSLASH>"~~"         strlit << "~~"; yy_pop_state();
+{IDENTIFIER}  yylval.s = new std::string(yytext); return tIDENTIFIER;
+
+  /* ====================================================================== */
+  /* ====[              2.7.3 - Cadeias de caracteres                 ]==== */
+  /* ====================================================================== */
+
+"~'"                           yy_push_state(X_STRING);
+<X_STRING>"~~"                 yy_push_state(X_BACKSLASH);
+<X_STRING>"~'"                 {
+                                 yylval.s = new std::string(strlit.str());
+                                 strlit.str("");
+                                 yy_pop_state();
+                                 return tSTRING;
+                               }
+<X_STRING>.                    strlit << *yytext;
+
+<X_BACKSLASH>n                 strlit << "~n"; yy_pop_state();
+<X_BACKSLASH>r                 strlit << "~r"; yy_pop_state();
+<X_BACKSLASH>t                 strlit << "~t"; yy_pop_state();
+<X_BACKSLASH>"~~"                strlit << "~~"; yy_pop_state();
 
 <X_BACKSLASH>[[:digit:]]{1,2} {
-                               strlit << (char)(unsigned char)strtoul(yytext, NULL, 16);
-                               yy_pop_state();
-                              }
-<X_BACKSLASH>.             strlit << *yytext; yy_pop_state();
+                                 strlit << (char)(unsigned char)strtoul(yytext, NULL, 16);
+                                 yy_pop_state();
+                               }
+<X_BACKSLASH>.                 strlit << *yytext; yy_pop_state();
 
-  /* +======+============================+*/
-  /* | ---  |  Outros caracteres         |*/
-  /* +======+============================+*/
-[[:space:]]               /* ignore remaining white space inside the program */
-.                         yyerror(yytext);    /* all other chars: error! */
+  /* ====================================================================== */
+  /* ====[                    (other characters)                      ]==== */
+  /* ====================================================================== */
 
-  /* +======+============================+*/
-  /* | ---  |  FIM                       |*/
-  /* +======+============================+*/
+[[:space:]]         /* ignore remaining white space inside the program */
+.                      yyerror(yytext);    /* all other chars: error! */
+
+  /* ====================================================================== */
+  /* ====[                           THE END                          ]==== */
+  /* ====================================================================== */
 
 %%

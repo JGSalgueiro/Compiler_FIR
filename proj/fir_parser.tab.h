@@ -46,25 +46,39 @@ extern int yydebug;
   enum yytokentype
   {
     tINTEGER = 258,
-    tIDENTIFIER = 259,
+    tFLOAT = 259,
     tSTRING = 260,
-    tWHILE = 261,
-    tIF = 262,
-    tPRINT = 263,
-    tREAD = 264,
-    tBEGIN = 265,
-    tEND = 266,
-    tDO = 267,
-    tFINALLY = 268,
-    tIFX = 269,
-    tTHEN = 270,
-    tELSE = 271,
-    tELIF = 272,
-    tGE = 273,
-    tLE = 274,
-    tEQ = 275,
-    tNE = 276,
-    tUNARY = 277
+    tIDENTIFIER = 261,
+    tNULL = 262,
+    tNE = 263,
+    tLE = 264,
+    tGE = 265,
+    tOR = 266,
+    tAND = 267,
+    tSIZEOF = 268,
+    tRETURN = 269,
+    tWRITE = 270,
+    tWRITELN = 271,
+    tPUBLIC = 272,
+    tEXTERNAL = 273,
+    tTYPE_STRING = 274,
+    tTYPE_INT = 275,
+    tTYPE_FLOAT = 276,
+    tVOID = 277,
+    tIF = 278,
+    tTHEN = 279,
+    tELSE = 280,
+    tWHILE = 281,
+    tDO = 282,
+    tBREAK = 283,
+    tCONTINUE = 284,
+    tREAD = 285,
+    tLEAVE = 286,
+    tRESTART = 287,
+    tFINALLY = 288,
+    tEQ = 291,
+    tUNARY = 292,
+    tUMINUS = 293
   };
 #endif
 
@@ -85,14 +99,17 @@ union YYSTYPE
   //-- don't change *any* of these --- END!
 
   int                   i;	/* integer value */
+  double                d;    /* double value*/
   std::string          *s;	/* symbol name or string literal */
-  cdk::basic_node      *node;	/* node pointer */
+  cdk::basic_node      *node; /* node pointer */
   cdk::sequence_node   *sequence;
   cdk::expression_node *expression; /* expression nodes */
   cdk::lvalue_node     *lvalue;
-  fir::block_node      *block;
+  std::vector<std::string> *ids;
+  fir::block_node       *block;
+  fir::body_node       *body;
 
-#line 96 "fir_parser.tab.h" /* yacc.c:1909  */
+#line 113 "fir_parser.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

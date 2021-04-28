@@ -7,6 +7,7 @@
 namespace fir {
 
   class memory_node: public cdk::unary_operation_node {
+    
   public:
     memory_node(int lineno, cdk::expression_node *argument) :
         cdk::unary_operation_node(lineno, argument) {

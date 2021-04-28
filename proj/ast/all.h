@@ -9,6 +9,7 @@ namespace fir {
 
 class adress_of_node;
 class block_node;
+class body_node;
 class evaluation_node;
 class function_call_node;
 class function_declaration_node;
@@ -38,6 +39,7 @@ class write_node;
 
 #include "ast/adress_of_node.h"
 #include "ast/block_node.h"
+#include "ast/body_node.h"
 #include "ast/evaluation_node.h"
 #include "ast/function_call_node.h"
 #include "ast/function_declaration_node.h"
