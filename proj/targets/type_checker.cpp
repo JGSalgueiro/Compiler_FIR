@@ -164,11 +164,7 @@ void fir::type_checker::do_write_node(fir::write_node *const node, int lvl) {
 //---------------------------------------------------------------------------
 
 void fir::type_checker::do_read_node(fir::read_node *const node, int lvl) {
-  try {
-    node->argument()->accept(this, lvl);
-  } catch (const std::string &id) {
-    throw "undeclared variable '" + id + "'";
-  }
+  ASSERT_SAFE_EXPRESSIONS
 }
 
 //---------------------------------------------------------------------------
@@ -229,7 +225,7 @@ void fir::type_checker::do_memory_node(fir::memory_node *const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS
 }
 
-void fir::type_checker::do_adress_of_node(fir::adress_of_node *const node, int lvl) {
+void fir::type_checker::do_address_of_node(fir::address_of_node *const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS
 }
 

@@ -3,15 +3,20 @@
 #include "targets/type_checker.h"
 #include "ast/all.h"  // automatically generated
 
+/*static std::string qualifier_name(int qualifier) {
+  if (qualifier == tPUBLIC) return "public";
+  if (qualifier == tPRIVATE)
+    return "private";
+  else
+    return "unknown qualifier";
+}*/
+
 //---------------------------------------------------------------------------
 
 void fir::xml_writer::do_nil_node(cdk::nil_node * const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS
 }
 void fir::xml_writer::do_data_node(cdk::data_node * const node, int lvl) {
-  ASSERT_SAFE_EXPRESSIONS
-}
-void fir::xml_writer::do_double_node(cdk::double_node * const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS
 }
 void fir::xml_writer::do_not_node(cdk::not_node * const node, int lvl) {
@@ -40,6 +45,10 @@ void fir::xml_writer::do_integer_node(cdk::integer_node * const node, int lvl) {
 }
 
 void fir::xml_writer::do_string_node(cdk::string_node * const node, int lvl) {
+  process_literal(node, lvl);
+}
+
+void fir::xml_writer::do_double_node(cdk::double_node * const node, int lvl) {
   process_literal(node, lvl);
 }
 
@@ -131,12 +140,15 @@ void fir::xml_writer::do_assignment_node(cdk::assignment_node * const node, int 
 void fir::xml_writer::do_evaluation_node(fir::evaluation_node * const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS;
   openTag(node, lvl);
-  node->argument()->accept(this, lvl + 2);
+  node->argument()->accept(this, lvl);
   closeTag(node, lvl);
 }
 
 void fir::xml_writer::do_write_node(fir::write_node *const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS
+  openTag(node, lvl);
+  node->argument()->accept(this, lvl + 2);
+  closeTag(node, lvl);
 }
 
 
@@ -145,7 +157,6 @@ void fir::xml_writer::do_write_node(fir::write_node *const node, int lvl) {
 void fir::xml_writer::do_read_node(fir::read_node * const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS;
   openTag(node, lvl);
-  node->argument()->accept(this, lvl + 2);
   closeTag(node, lvl);
 }
 
@@ -153,13 +164,15 @@ void fir::xml_writer::do_read_node(fir::read_node * const node, int lvl) {
 
 void fir::xml_writer::do_while_node(fir::while_node * const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS;
-  openTag(node, lvl);
-  openTag("condition", lvl + 2);
+  openTag("condition", lvl);
   node->condition()->accept(this, lvl + 4);
-  closeTag("condition", lvl + 2);
-  openTag("block", lvl + 2);
+  closeTag("condition", lvl);
+  openTag("block", lvl);
   node->block()->accept(this, lvl + 4);
-  closeTag("block", lvl + 2);
+  closeTag("block", lvl);
+  openTag("finally", lvl);
+  node->finally()->accept(this, lvl + 4);
+  closeTag("finally", lvl);
   closeTag(node, lvl);
 }
 
@@ -168,27 +181,29 @@ void fir::xml_writer::do_while_node(fir::while_node * const node, int lvl) {
 void fir::xml_writer::do_if_node(fir::if_node * const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS;
   openTag(node, lvl);
-  openTag("condition", lvl + 2);
+  openTag("condition", lvl);
   node->condition()->accept(this, lvl + 4);
-  closeTag("condition", lvl + 2);
-  openTag("then", lvl + 2);
+  closeTag("condition", lvl);
+  openTag("block", lvl);
   node->block()->accept(this, lvl + 4);
-  closeTag("then", lvl + 2);
+  closeTag("block", lvl);
   closeTag(node, lvl);
 }
 
 void fir::xml_writer::do_if_else_node(fir::if_else_node * const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS;
   openTag(node, lvl);
-  openTag("condition", lvl + 2);
+  openTag("condition", lvl);
   node->condition()->accept(this, lvl + 4);
-  closeTag("condition", lvl + 2);
-  openTag("then", lvl + 2);
+  closeTag("condition", lvl);
+  openTag("thenblock", lvl);
   node->thenblock()->accept(this, lvl + 4);
-  closeTag("then", lvl + 2);
-  openTag("else", lvl + 2);
-  node->elseblock()->accept(this, lvl + 4);
-  closeTag("else", lvl + 2);
+  closeTag("thenblock", lvl);
+  if (node->elseblock()) {
+    openTag("elseblock", lvl);
+    node->elseblock()->accept(this, lvl + 4);
+    closeTag("elseblock", lvl);
+  }
   closeTag(node, lvl);
 }
 
@@ -197,34 +212,79 @@ void fir::xml_writer::do_if_else_node(fir::if_else_node * const node, int lvl) {
 
 void fir::xml_writer::do_leave_node(fir::leave_node *const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS
+  openTag(node, lvl);
+  openTag("lit", lvl);
+  node->lit()->accept(this, lvl + 4);
+  closeTag("lit", lvl);
+  closeTag(node, lvl);
 }
 
 void fir::xml_writer::do_restart_node(fir::restart_node *const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS
+  openTag(node, lvl);
+  openTag("lit", lvl);
+  node->lit()->accept(this, lvl + 4);
+  closeTag("lit", lvl);
+  closeTag(node, lvl);
 }
 
 void fir::xml_writer::do_return_node(fir::return_node *const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS
+  openTag(node, lvl);
+  openTag("retval", lvl);
+  if (node->retval()) {
+    node->retval()->accept(this, lvl + 4);
+  }
+  closeTag("retval", lvl);
+  closeTag(node, lvl);
 }
 
 void fir::xml_writer::do_null_node(fir::null_node *const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS
+  openTag(node, lvl);
+  closeTag(node, lvl);
 }
 
 void fir::xml_writer::do_block_node(fir::block_node *const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS
+  openTag(node, lvl);
+  openTag("variables", lvl);
+  if (node->variables()) {
+    node->variables()->accept(this, lvl + 4);
+  }
+  closeTag("variables", lvl);
+  openTag("instructions", lvl);
+  if (node->instructions()) {
+    node->instructions()->accept(this, lvl + 4);
+  }
+  closeTag("instructions", lvl);
+  closeTag(node, lvl);
 }
 
 void fir::xml_writer::do_sizeof_node(fir::sizeof_node *const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS
+  openTag(node, lvl);
+  node->argument()->accept(this, lvl + 2);
+  closeTag(node, lvl);
 }
 
 void fir::xml_writer::do_left_index_node(fir::left_index_node *const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS
+  openTag(node, lvl);
+  openTag("base", lvl);
+  node->base()->accept(this, lvl + 2);
+  closeTag("base", lvl);
+  openTag("index", lvl);
+  node->index()->accept(this, lvl + 2);
+  closeTag("index", lvl);
+  closeTag(node, lvl);
 }
 
 void fir::xml_writer::do_identity_node(fir::identity_node *const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS
+  openTag(node, lvl);
+  node->argument()->accept(this, lvl + 2);
+  closeTag(node, lvl);
 }
 
 void fir::xml_writer::do_function_declaration_node(fir::function_declaration_node *const node, int lvl) {
@@ -233,6 +293,23 @@ void fir::xml_writer::do_function_declaration_node(fir::function_declaration_nod
 
 void fir::xml_writer::do_body_node(fir::body_node *const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS
+  openTag(node, lvl);
+  openTag("prologue", lvl);
+  if (node->prologue()) {
+    node->prologue()->accept(this, lvl + 4);
+  }
+  closeTag("prologue", lvl);
+  openTag("main_block", lvl);
+  if (node->main_block()) {
+    node->main_block()->accept(this, lvl + 4);
+  }
+  closeTag("main_block", lvl);
+  openTag("epilogue", lvl);
+  if (node->epilogue()) {
+    node->epilogue()->accept(this, lvl + 4);
+  }
+  closeTag("epilogue", lvl);
+  closeTag(node, lvl);
 }
 
 void fir::xml_writer::do_function_definition_node(fir::function_definition_node *const node, int lvl) {
@@ -249,8 +326,14 @@ void fir::xml_writer::do_variable_declaration_node(fir::variable_declaration_nod
 
 void fir::xml_writer::do_memory_node(fir::memory_node *const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS
+  openTag(node, lvl);
+  node->argument()->accept(this, lvl + 2);
+  closeTag(node, lvl);
 }
 
-void fir::xml_writer::do_adress_of_node(fir::adress_of_node *const node, int lvl) {
+void fir::xml_writer::do_address_of_node(fir::address_of_node *const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS
+  openTag(node, lvl);
+  node->lvalue()->accept(this, lvl + 2);
+  closeTag(node, lvl);
 }

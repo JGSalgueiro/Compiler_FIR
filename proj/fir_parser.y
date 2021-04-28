@@ -46,13 +46,13 @@
 %token tTYPE_STRING tTYPE_INT tTYPE_FLOAT tVOID
 %token tIF tTHEN tELSE
 %token tWHILE tDO
-%token tBREAK tCONTINUE tREAD tLEAVE tRESTART tFINALLY
+%token tBREAK tCONTINUE tREAD tLEAVE tRESTART tFINALLY 
 
 %nonassoc tIF
 %nonassoc tELSE
 
 %right '=' "->" '@' ">>"
-%left tGE tLE tEQ tNE tOR '>' '<'
+%left tGE tLE tEQ tNE tOR tREAD '>' '<' 
 %left '+' '-'
 %left '*' '/' '%'
 %nonassoc tUNARY
@@ -206,10 +206,11 @@ expression      : integer                       { $$ = $1; }
                 /* OTHER EXPRESSION */
                 | tIDENTIFIER '(' opt_expressions ')'   { $$ = new fir::function_call_node(LINE, *$1, $3); delete $1; }
                 | tSIZEOF '(' expression ')'   { $$ = new fir::sizeof_node(LINE, $3); }
+                | tREAD                       { $$ = new fir::read_node(LINE); }
                 /* OTHER EXPRESSION */
                 | '(' expression ')'            { $$ = $2; }
                 | '[' expression ']'            { $$ = new fir::memory_node(LINE, $2); }
-                | lvalue '?'                    { $$ = new fir::adress_of_node(LINE, $1); }
+                | lvalue '?'                    { $$ = new fir::address_of_node(LINE, $1); }
                 ;
 
 expressions     : expression                     { $$ = new cdk::sequence_node(LINE, $1);     }

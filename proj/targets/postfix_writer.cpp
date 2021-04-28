@@ -84,7 +84,7 @@ void fir::postfix_writer::do_variable_declaration_node(fir::variable_declaration
   //EMPTY TODO
 }
 
-void fir::postfix_writer::do_adress_of_node(fir::adress_of_node *const node, int lvl) {
+void fir::postfix_writer::do_address_of_node(fir::address_of_node *const node, int lvl) {
   //EMPTY TODO
 }
 
@@ -246,7 +246,6 @@ void fir::postfix_writer::do_read_node(fir::read_node * const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS;
   _pf.CALL("readi");
   _pf.LDFVAL32();
-  node->argument()->accept(this, lvl);
   _pf.STINT();
 }
 

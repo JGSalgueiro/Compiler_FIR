@@ -83,14 +83,15 @@ IDENTIFIER   {LETTER}({LETTER}|[[:digit:]])*
   /* ====[                 6 - Operadores de expressões               ]==== */
   /* ====================================================================== */
 
-[\[\](),/]       return *yytext;
-[-+/%=]        return *yytext;
+[\[\](),?]       return *yytext;
+[-+*/%~<>?=]        return *yytext;
 "=="                   return tEQ;
 "!="                   return tNE;
 "<="                   return tLE;
 ">="                   return tGE;
 "&&"                   return tAND;
 "||"                   return tOR;
+"@"                    return tREAD;
 
   /* ====================================================================== */
   /* ====[              3   - Delimitadores e separadores             ]==== */
@@ -98,7 +99,7 @@ IDENTIFIER   {LETTER}({LETTER}|[[:digit:]])*
   /* ====[                 5.3 - Instrução de retorno                 ]==== */
   /* ====================================================================== */
 
-[#\[\]{};:/,]                return *yytext;
+[#\[\](){};:!,]                return *yytext;
 "return"                       return tRETURN;
 "write"                        return tWRITE;
 "writeln"                      return tWRITELN;
