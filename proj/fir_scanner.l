@@ -24,7 +24,7 @@ LETTER  [A-Za-z_]
 IDENTIFIER   {LETTER}({LETTER}|[[:digit:]])*
 
 %x X_COMMENT
-%x X_STRING  X_BACKSLASH 
+%x X_STRING  X_HEXA
 %x X_OCTAL
 %%
  {yydebug=1; set_debug(1);}
@@ -44,12 +44,12 @@ IDENTIFIER   {LETTER}({LETTER}|[[:digit:]])*
   /* ====[                  Null pointers                             ]==== */
   /* ====================================================================== */
 
-"void" 				     return tVOID;
+"void" 				           return tVOID;
 "int"                    return tTYPE_INT;
 "float"                  return tTYPE_FLOAT;
 "string"                 return tTYPE_STRING;
 
-"null"			         return tNULL;
+"null"			             return tNULL;
 "sizeof"                 return tSIZEOF;
 
   /* ====================================================================== */
@@ -129,7 +129,7 @@ IDENTIFIER   {LETTER}({LETTER}|[[:digit:]])*
   /* ====================================================================== */
 
 "'"                           yy_push_state(X_STRING);
-<X_STRING>"~~"                 yy_push_state(X_BACKSLASH);
+<X_STRING>"~"                 yy_push_state(X_HEXA);
 <X_STRING>"'"                 {
                                  yylval.s = new std::string(strlit.str());
                                  strlit.str("");
@@ -138,16 +138,18 @@ IDENTIFIER   {LETTER}({LETTER}|[[:digit:]])*
                                }
 <X_STRING>.                    strlit << *yytext;
 
-<X_BACKSLASH>n                 strlit << "~n"; yy_pop_state();
-<X_BACKSLASH>r                 strlit << "~r"; yy_pop_state();
-<X_BACKSLASH>t                 strlit << "~t"; yy_pop_state();
-<X_BACKSLASH>"~~"              strlit << "~~"; yy_pop_state();
+<X_HEXA>"'"               strlit << "'"; yy_pop_state();
+<X_HEXA>"0"               yy_pop_state();
+<X_HEXA>n                 strlit << "~n"; yy_pop_state();
+<X_HEXA>r                 strlit << "~r"; yy_pop_state();
+<X_HEXA>t                 strlit << "~t"; yy_pop_state();
+<X_HEXA>"~"               strlit << "~"; yy_pop_state();
 
-<X_BACKSLASH>[[:digit:]]{1,2} {
+<X_HEXA>[[:digit:]]{1,2} {
                                  strlit << (char)(unsigned char)strtoul(yytext, NULL, 16);
                                  yy_pop_state();
                                }
-<X_BACKSLASH>.                 strlit << *yytext; yy_pop_state();
+<X_HEXA>.                 strlit << *yytext; yy_pop_state();
 
   /* ====================================================================== */
   /* ====[                    (other characters)                      ]==== */
