@@ -1,5 +1,5 @@
 %option c++ prefix="fir_scanner_" outfile="fir_scanner.cpp"
-%option stack noyywrap yylineno 8bit
+%option stack noyywrap yylineno 8bit debug
 %{ 
 // make relevant includes before including the parser's tab file
 #include <string>
@@ -27,6 +27,7 @@ IDENTIFIER   {LETTER}({LETTER}|[[:digit:]])*
 %x X_STRING  X_BACKSLASH 
 %x X_OCTAL
 %%
+ {yydebug=1; set_debug(1);}
 
   /* ====================================================================== */
   /* ====[                      COMMENTS                              ]==== */
@@ -137,7 +138,7 @@ IDENTIFIER   {LETTER}({LETTER}|[[:digit:]])*
 <X_BACKSLASH>n                 strlit << "~n"; yy_pop_state();
 <X_BACKSLASH>r                 strlit << "~r"; yy_pop_state();
 <X_BACKSLASH>t                 strlit << "~t"; yy_pop_state();
-<X_BACKSLASH>"~~"                strlit << "~~"; yy_pop_state();
+<X_BACKSLASH>"~~"              strlit << "~~"; yy_pop_state();
 
 <X_BACKSLASH>[[:digit:]]{1,2} {
                                  strlit << (char)(unsigned char)strtoul(yytext, NULL, 16);

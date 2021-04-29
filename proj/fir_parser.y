@@ -46,16 +46,16 @@
 %token tTYPE_STRING tTYPE_INT tTYPE_FLOAT tVOID
 %token tIF tTHEN tELSE
 %token tWHILE tDO
-%token tBREAK tCONTINUE tREAD tLEAVE tRESTART tFINALLY 
+%token tBREAK tCONTINUE tLEAVE tRESTART tFINALLY 
 
 %nonassoc tIF
 %nonassoc tELSE
 
-%right '=' "->" '@' ">>"
-%left tGE tLE tEQ tNE tOR tREAD '>' '<' 
+%right '=' "->" ">>"
+%left tGE tLE tEQ tNE tOR '>' '<' 
 %left '+' '-'
 %left '*' '/' '%'
-%nonassoc tUNARY
+%nonassoc tUNARY '@'
 %right tUMINUS 
 
 %type<s> string
@@ -130,10 +130,10 @@ fundef   : data_type  tIDENTIFIER '(' argdecs ')' tARROW literal { $$ = new fir:
          | data_type tPUBLIC tIDENTIFIER '(' argdecs ')' tARROW literal body { $$ = new fir::function_definition_node(LINE, tPUBLIC, *$3, $5, $9, new fir::return_node(LINE, $8)); }
          ; 
 
-body     : "@" block                    { $$ = new fir::body_node(LINE, $2, nullptr, nullptr); }
-         | "@" block ">>" block         { $$ = new fir::body_node(LINE, $2, nullptr, $4); }
-         | "@" block  block             { $$ = new fir::body_node(LINE, $2, $3, nullptr); }
-         | "@" block block ">>" block   { $$ = new fir::body_node(LINE, $2, $3, $5); }
+body     : '@' block                    { $$ = new fir::body_node(LINE, $2, nullptr, nullptr); }
+         | '@' block ">>" block         { $$ = new fir::body_node(LINE, $2, nullptr, $4); }
+         | '@' block  block             { $$ = new fir::body_node(LINE, $2, $3, nullptr); }
+         | '@' block block ">>" block   { $$ = new fir::body_node(LINE, $2, $3, $5); }
          | ">>" block                   { $$ = new fir::body_node(LINE, nullptr, nullptr, $2); }
          | block ">>" block             { $$ = new fir::body_node(LINE, nullptr, $1, $3); }
          | block                        { $$ = new fir::body_node(LINE, nullptr, $1, nullptr); }
@@ -158,11 +158,7 @@ opt_instructions: /* empty */  { $$ = new cdk::sequence_node(LINE); }
                 | instructions { $$ = $1; }
                 ;
 
-instruction     : tIF expression tTHEN instruction                                          { $$ = new fir::if_node(LINE, $2, $4); }
-                | tIF expression tTHEN instruction tELSE instruction                        { $$ = new fir::if_else_node(LINE, $2, $4, $6); }
-                | tWHILE expression tDO instruction                                         { $$ = new fir::while_node(LINE, $2, $4); }
-                | tWHILE expression tDO instruction tFINALLY instruction                    { $$ = new fir::while_node(LINE, $2, $4, $6); }
-                | expression ';'                                                            { $$ = new fir::evaluation_node(LINE, $1); }
+instruction     : expression ';'                                                            { $$ = new fir::evaluation_node(LINE, $1); }
                 | tWRITE expressions ';'                                                  { $$ = new fir::write_node(LINE, $2, false); }
                 | tWRITELN expressions ';'                                                  { $$ = new fir::write_node(LINE, $2, true); }
                 | tLEAVE ';'                                                                { $$ = new fir::leave_node(LINE); }
@@ -171,6 +167,10 @@ instruction     : tIF expression tTHEN instruction                              
                 | tRESTART expression ';'                                                        { $$ = new fir::restart_node(LINE, $2); }   
                 | tRETURN                                                                    { $$ = new fir::return_node(LINE, nullptr); }
                 | block                                                                     { $$ = $1; }
+                |tIF expression tTHEN instruction                                          { $$ = new fir::if_node(LINE, $2, $4); }
+                | tIF expression tTHEN instruction tELSE instruction                        { $$ = new fir::if_else_node(LINE, $2, $4, $6); }
+                | tWHILE expression tDO instruction                                         { $$ = new fir::while_node(LINE, $2, $4); }
+                | tWHILE expression tDO instruction tFINALLY instruction                    { $$ = new fir::while_node(LINE, $2, $4, $6); }
                 ;
 
 lvalue          : tIDENTIFIER                                            { $$ = new cdk::variable_node(LINE, *$1); delete $1; }
@@ -207,7 +207,7 @@ expression      : literal                       { $$ = $1; }
                 /* OTHER EXPRESSION */
                 | tIDENTIFIER '(' opt_expressions ')'   { $$ = new fir::function_call_node(LINE, *$1, $3); delete $1; }
                 | tSIZEOF '(' expression ')'   { $$ = new fir::sizeof_node(LINE, $3); }
-                | tREAD                       { $$ = new fir::read_node(LINE); }
+                | '@'                      { $$ = new fir::read_node(LINE); }
                 /* OTHER EXPRESSION */
                 | '(' expression ')'            { $$ = $2; }
                 | '[' expression ']'            { $$ = new fir::memory_node(LINE, $2); }
