@@ -42,7 +42,7 @@
 %token<expression> tNULL
 %token tNE tLE tGE tOR tAND tSIZEOF 
 %token tRETURN tWRITE tWRITELN tARROW
-%token tPUBLIC tEXTERNAL
+%token tEXTERNAL
 %token tTYPE_STRING tTYPE_INT tTYPE_FLOAT tVOID
 %token tIF tTHEN tELSE
 %token tWHILE tDO
@@ -90,7 +90,7 @@ opt_decs  : /* empty */         { $$ = nullptr; }
              ;
 
 vardec       : tEXTERNAL data_type  tIDENTIFIER        opt_initializer { $$ = new fir::variable_declaration_node(LINE, tEXTERNAL,  $2, *$3, nullptr); }
-             | tPUBLIC  data_type  tIDENTIFIER         opt_initializer { $$ = new fir::variable_declaration_node(LINE, tPUBLIC,  $2, *$3, $4); }
+             | '*'  data_type  tIDENTIFIER         opt_initializer { $$ = new fir::variable_declaration_node(LINE, '*',  $2, *$3, $4); }
              |          data_type  tIDENTIFIER         opt_initializer { $$ = new fir::variable_declaration_node(LINE, tEXTERNAL, $1, *$2, $3); }
              ;
 
@@ -115,19 +115,19 @@ opt_initializer  : /* empty */         { $$ = nullptr; /* must be nullptr, not N
                  ;
 
 fundec   :          data_type  tIDENTIFIER '(' argdecs ')' { $$ = new fir::function_declaration_node(LINE, tEXTERNAL, $1, *$2, $4); }
-         | data_type tEXTERNAL tIDENTIFIER '(' argdecs ')' { $$ = new fir::function_declaration_node(LINE, tPUBLIC,  $1, *$3, $5); }
-         | data_type tPUBLIC tIDENTIFIER '(' argdecs ')' { $$ = new fir::function_declaration_node(LINE, tPUBLIC,  $1, *$3, $5); }
+         | data_type tEXTERNAL tIDENTIFIER '(' argdecs ')' { $$ = new fir::function_declaration_node(LINE, '*',  $1, *$3, $5); }
+         | data_type '*' tIDENTIFIER '(' argdecs ')' { $$ = new fir::function_declaration_node(LINE, '*',  $1, *$3, $5); }
          ;
 
 fundef   : data_type  tIDENTIFIER '(' argdecs ')' tARROW literal { $$ = new fir::function_definition_node(LINE, tEXTERNAL, *$2, $4, nullptr, new fir::return_node(LINE, $7)); }
-         | data_type tEXTERNAL tIDENTIFIER '(' argdecs ')' tARROW literal { $$ = new fir::function_definition_node(LINE, tPUBLIC, *$3, $5, nullptr, new fir::return_node(LINE, $8)); }
-         | data_type tPUBLIC tIDENTIFIER '(' argdecs ')' tARROW literal { $$ = new fir::function_definition_node(LINE, tPUBLIC, *$3, $5, nullptr, new fir::return_node(LINE, $8)); }
+         | data_type tEXTERNAL tIDENTIFIER '(' argdecs ')' tARROW literal { $$ = new fir::function_definition_node(LINE, '*', *$3, $5, nullptr, new fir::return_node(LINE, $8)); }
+         | data_type '*' tIDENTIFIER '(' argdecs ')' tARROW literal { $$ = new fir::function_definition_node(LINE, '*', *$3, $5, nullptr, new fir::return_node(LINE, $8)); }
          | data_type  tIDENTIFIER '(' argdecs ')' body { $$ = new fir::function_definition_node(LINE, tEXTERNAL, *$2, $4, $6, nullptr); }
-         | data_type tEXTERNAL tIDENTIFIER '(' argdecs ')' body { $$ = new fir::function_definition_node(LINE, tPUBLIC, *$3, $5, $7, nullptr); }
-         | data_type tPUBLIC tIDENTIFIER '(' argdecs ')' body { $$ = new fir::function_definition_node(LINE, tPUBLIC, *$3, $5, $7, nullptr); }
+         | data_type tEXTERNAL tIDENTIFIER '(' argdecs ')' body { $$ = new fir::function_definition_node(LINE, '*', *$3, $5, $7, nullptr); }
+         | data_type '*' tIDENTIFIER '(' argdecs ')' body { $$ = new fir::function_definition_node(LINE, '*', *$3, $5, $7, nullptr); }
          | data_type  tIDENTIFIER '(' argdecs ')' tARROW literal body { $$ = new fir::function_definition_node(LINE, tEXTERNAL, *$2, $4, $8, new fir::return_node(LINE, $7)); }
-         | data_type tEXTERNAL tIDENTIFIER '(' argdecs ')' tARROW literal body { $$ = new fir::function_definition_node(LINE, tPUBLIC, *$3, $5, $9, new fir::return_node(LINE, $8)); }
-         | data_type tPUBLIC tIDENTIFIER '(' argdecs ')' tARROW literal body { $$ = new fir::function_definition_node(LINE, tPUBLIC, *$3, $5, $9, new fir::return_node(LINE, $8)); }
+         | data_type tEXTERNAL tIDENTIFIER '(' argdecs ')' tARROW literal body { $$ = new fir::function_definition_node(LINE, '*', *$3, $5, $9, new fir::return_node(LINE, $8)); }
+         | data_type '*' tIDENTIFIER '(' argdecs ')' tARROW literal body { $$ = new fir::function_definition_node(LINE, '*', *$3, $5, $9, new fir::return_node(LINE, $8)); }
          ; 
 
 body     : '@' block                    { $$ = new fir::body_node(LINE, $2, nullptr, nullptr); }
@@ -166,11 +166,11 @@ instruction     : expression ';'                                                
                 | tRESTART ';'                                                                { $$ = new fir::restart_node(LINE); }
                 | tRESTART expression ';'                                                        { $$ = new fir::restart_node(LINE, $2); }   
                 | tRETURN                                                                    { $$ = new fir::return_node(LINE, nullptr); }
-                | block                                                                     { $$ = $1; }
-                |tIF expression tTHEN instruction                                          { $$ = new fir::if_node(LINE, $2, $4); }
+                | tIF expression tTHEN instruction                                          { $$ = new fir::if_node(LINE, $2, $4); }
                 | tIF expression tTHEN instruction tELSE instruction                        { $$ = new fir::if_else_node(LINE, $2, $4, $6); }
                 | tWHILE expression tDO instruction                                         { $$ = new fir::while_node(LINE, $2, $4); }
                 | tWHILE expression tDO instruction tFINALLY instruction                    { $$ = new fir::while_node(LINE, $2, $4, $6); }
+                | block                                                                     { $$ = $1; }
                 ;
 
 lvalue          : tIDENTIFIER                                            { $$ = new cdk::variable_node(LINE, *$1); delete $1; }

@@ -57,7 +57,6 @@ IDENTIFIER   {LETTER}({LETTER}|[[:digit:]])*
   /* ====================================================================== */
 
 "?"                      return tEXTERNAL;
-"*"                     return tPUBLIC;
 
   /* ====================================================================== */
   /* ====[                 Instrução condicional                      ]==== */
@@ -125,9 +124,9 @@ IDENTIFIER   {LETTER}({LETTER}|[[:digit:]])*
   /* ====[              Cadeias de caracteres                         ]==== */
   /* ====================================================================== */
 
-"~'"                           yy_push_state(X_STRING);
+"'"                           yy_push_state(X_STRING);
 <X_STRING>"~~"                 yy_push_state(X_BACKSLASH);
-<X_STRING>"~'"                 {
+<X_STRING>"'"                 {
                                  yylval.s = new std::string(strlit.str());
                                  strlit.str("");
                                  yy_pop_state();
