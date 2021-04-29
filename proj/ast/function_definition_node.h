@@ -21,7 +21,11 @@ namespace fir {
         cdk::typed_node(lineno), _qualifier(qualifier), _identifier(identifier), _arguments(arguments), _body(body), _ret(ret)  {
         type(cdk::primitive_type::create(0, cdk::TYPE_VOID));
     }
-
+    inline function_definition_node(int lineno, int qualifier, std::shared_ptr<cdk::basic_type> funType, const std::string &identifier,
+                             cdk::sequence_node *arguments, body_node *body, return_node *ret) :
+        cdk::typed_node(lineno), _qualifier(qualifier), _identifier(identifier), _arguments(arguments), _body(body), _ret(ret) {
+      type(funType);
+    }
 
   public:
     inline int qualifier() {

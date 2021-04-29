@@ -51,11 +51,11 @@
 %nonassoc tIF
 %nonassoc tELSE
 
-%right '=' "->" ">>"
+%right '=' "->" t2SETAST t3SETAST
 %left tGE tLE tEQ tNE tOR '>' '<' 
-%left '+' '-'
+%left '+' '-' t3SETASF
 %left '*' '/' '%'
-%nonassoc tUNARY '@'
+%nonassoc tUNARY '@' t2SETASF
 %right tUMINUS 
 
 %type<s> string
@@ -89,9 +89,9 @@ opt_decs  : /* empty */         { $$ = nullptr; }
              | declarations     { $$ = $1; }
              ;
 
-vardec       : tEXTERNAL data_type  tIDENTIFIER        opt_initializer { $$ = new fir::variable_declaration_node(LINE, tEXTERNAL,  $2, *$3, nullptr); }
-             | '*'  data_type  tIDENTIFIER         opt_initializer { $$ = new fir::variable_declaration_node(LINE, '*',  $2, *$3, $4); }
-             |          data_type  tIDENTIFIER         opt_initializer { $$ = new fir::variable_declaration_node(LINE, tEXTERNAL, $1, *$2, $3); }
+vardec       : data_type tEXTERNAL  tIDENTIFIER   opt_initializer { $$ = new fir::variable_declaration_node(LINE, tEXTERNAL,  $1, *$3, nullptr); }
+             | data_type '*'  tIDENTIFIER         opt_initializer { $$ = new fir::variable_declaration_node(LINE, '*',  $1, *$3, $4); }
+             | data_type  tIDENTIFIER             opt_initializer { $$ = new fir::variable_declaration_node(LINE, tEXTERNAL, $1, *$2, $3); }
              ;
 
 /*vardecs      : vardec            { $$ = new cdk::sequence_node(LINE, $1);     }
@@ -106,8 +106,8 @@ data_type    : tTYPE_STRING                     { $$ = cdk::primitive_type::crea
              | tTYPE_INT                        { $$ = cdk::primitive_type::create(4, cdk::TYPE_INT);     }
              | tTYPE_FLOAT                      { $$ = cdk::primitive_type::create(8, cdk::TYPE_DOUBLE);  }
              | '<' data_type '>'                { $$ = cdk::reference_type::create(4, $2); }
-             /*| "<<" data_type ">>"              { $$ = cdk::reference_type::create(4, $2); }*/
-             | "<<<" data_type ">>>"            { $$ = cdk::reference_type::create(4, nullptr); }
+             | t2SETAST data_type t2SETASF      { $$ = cdk::reference_type::create(4, $2); }
+             | t3SETAST data_type t3SETASF      { $$ = cdk::reference_type::create(4, nullptr); }
              ;
        
 opt_initializer  : /* empty */         { $$ = nullptr; /* must be nullptr, not NIL */ }
@@ -117,25 +117,31 @@ opt_initializer  : /* empty */         { $$ = nullptr; /* must be nullptr, not N
 fundec   :          data_type  tIDENTIFIER '(' argdecs ')' { $$ = new fir::function_declaration_node(LINE, tEXTERNAL, $1, *$2, $4); }
          | data_type tEXTERNAL tIDENTIFIER '(' argdecs ')' { $$ = new fir::function_declaration_node(LINE, '*',  $1, *$3, $5); }
          | data_type '*' tIDENTIFIER '(' argdecs ')' { $$ = new fir::function_declaration_node(LINE, '*',  $1, *$3, $5); }
+         | tVOID  tIDENTIFIER '(' argdecs ')' { $$ = new fir::function_declaration_node(LINE, tEXTERNAL, *$2, $4); }
+         | tVOID tEXTERNAL tIDENTIFIER '(' argdecs ')' { $$ = new fir::function_declaration_node(LINE, '*', *$3, $5); }
+         | tVOID '*' tIDENTIFIER '(' argdecs ')' { $$ = new fir::function_declaration_node(LINE, '*', *$3, $5); }
          ;
 
-fundef   : data_type  tIDENTIFIER '(' argdecs ')' tARROW literal { $$ = new fir::function_definition_node(LINE, tEXTERNAL, *$2, $4, nullptr, new fir::return_node(LINE, $7)); }
-         | data_type tEXTERNAL tIDENTIFIER '(' argdecs ')' tARROW literal { $$ = new fir::function_definition_node(LINE, '*', *$3, $5, nullptr, new fir::return_node(LINE, $8)); }
-         | data_type '*' tIDENTIFIER '(' argdecs ')' tARROW literal { $$ = new fir::function_definition_node(LINE, '*', *$3, $5, nullptr, new fir::return_node(LINE, $8)); }
-         | data_type  tIDENTIFIER '(' argdecs ')' body { $$ = new fir::function_definition_node(LINE, tEXTERNAL, *$2, $4, $6, nullptr); }
-         | data_type tEXTERNAL tIDENTIFIER '(' argdecs ')' body { $$ = new fir::function_definition_node(LINE, '*', *$3, $5, $7, nullptr); }
-         | data_type '*' tIDENTIFIER '(' argdecs ')' body { $$ = new fir::function_definition_node(LINE, '*', *$3, $5, $7, nullptr); }
-         | data_type  tIDENTIFIER '(' argdecs ')' tARROW literal body { $$ = new fir::function_definition_node(LINE, tEXTERNAL, *$2, $4, $8, new fir::return_node(LINE, $7)); }
-         | data_type tEXTERNAL tIDENTIFIER '(' argdecs ')' tARROW literal body { $$ = new fir::function_definition_node(LINE, '*', *$3, $5, $9, new fir::return_node(LINE, $8)); }
-         | data_type '*' tIDENTIFIER '(' argdecs ')' tARROW literal body { $$ = new fir::function_definition_node(LINE, '*', *$3, $5, $9, new fir::return_node(LINE, $8)); }
+fundef   : data_type  tIDENTIFIER '(' argdecs ')' tARROW literal { $$ = new fir::function_definition_node(LINE, tEXTERNAL,$1, *$2, $4, nullptr, new fir::return_node(LINE, $7)); }
+         | data_type tEXTERNAL tIDENTIFIER '(' argdecs ')' tARROW literal { $$ = new fir::function_definition_node(LINE, '*',$1, *$3, $5, nullptr, new fir::return_node(LINE, $8)); }
+         | data_type '*' tIDENTIFIER '(' argdecs ')' tARROW literal { $$ = new fir::function_definition_node(LINE, '*',$1, *$3, $5, nullptr, new fir::return_node(LINE, $8)); }
+         | data_type  tIDENTIFIER '(' argdecs ')' tARROW literal body { $$ = new fir::function_definition_node(LINE, tEXTERNAL,$1, *$2, $4, $8, new fir::return_node(LINE, $7)); }
+         | data_type tEXTERNAL tIDENTIFIER '(' argdecs ')' tARROW literal body { $$ = new fir::function_definition_node(LINE, '*',$1, *$3, $5, $9, new fir::return_node(LINE, $8)); }
+         | data_type '*' tIDENTIFIER '(' argdecs ')' tARROW literal body { $$ = new fir::function_definition_node(LINE, '*',$1, *$3, $5, $9, new fir::return_node(LINE, $8)); }
+         | tVOID  tIDENTIFIER '(' argdecs ')' body { $$ = new fir::function_definition_node(LINE, tEXTERNAL, *$2, $4, $6, nullptr); }
+         | tVOID tEXTERNAL tIDENTIFIER '(' argdecs ')' body { $$ = new fir::function_definition_node(LINE, '*', *$3, $5, $7, nullptr); }
+         | tVOID '*' tIDENTIFIER '(' argdecs ')' body { $$ = new fir::function_definition_node(LINE, '*', *$3, $5, $7, nullptr); }
+         | data_type  tIDENTIFIER '(' argdecs ')' body { $$ = new fir::function_definition_node(LINE, tEXTERNAL,$1, *$2, $4, $6, nullptr); }
+         | data_type tEXTERNAL tIDENTIFIER '(' argdecs ')' body { $$ = new fir::function_definition_node(LINE, '*',$1, *$3, $5, $7, nullptr); }
+         | data_type '*' tIDENTIFIER '(' argdecs ')' body { $$ = new fir::function_definition_node(LINE, '*',$1, *$3, $5, $7, nullptr); }
          ; 
 
 body     : '@' block                    { $$ = new fir::body_node(LINE, $2, nullptr, nullptr); }
-         | '@' block ">>" block         { $$ = new fir::body_node(LINE, $2, nullptr, $4); }
+         | '@' block t2SETASF block         { $$ = new fir::body_node(LINE, $2, nullptr, $4); }
          | '@' block  block             { $$ = new fir::body_node(LINE, $2, $3, nullptr); }
-         | '@' block block ">>" block   { $$ = new fir::body_node(LINE, $2, $3, $5); }
-         | ">>" block                   { $$ = new fir::body_node(LINE, nullptr, nullptr, $2); }
-         | block ">>" block             { $$ = new fir::body_node(LINE, nullptr, $1, $3); }
+         | '@' block block t2SETASF block   { $$ = new fir::body_node(LINE, $2, $3, $5); }
+         | t2SETASF block                   { $$ = new fir::body_node(LINE, nullptr, nullptr, $2); }
+         | block t2SETASF block             { $$ = new fir::body_node(LINE, nullptr, $1, $3); }
          | block                        { $$ = new fir::body_node(LINE, nullptr, $1, nullptr); }
          ;       
 

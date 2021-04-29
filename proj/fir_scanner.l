@@ -90,6 +90,10 @@ IDENTIFIER   {LETTER}({LETTER}|[[:digit:]])*
 "&&"                   return tAND;
 "||"                   return tOR;
 "->"                   return tARROW;
+">>"                   return t2SETASF;
+"<<"                   return t2SETAST;
+">>>"                  return t3SETASF;
+"<<<"                  return t3SETAST;
 
   /* ====================================================================== */
   /* ====[              Delimitadores e separadores                   ]==== */
