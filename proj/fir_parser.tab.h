@@ -59,26 +59,27 @@ extern int yydebug;
     tRETURN = 269,
     tWRITE = 270,
     tWRITELN = 271,
-    tPUBLIC = 272,
-    tEXTERNAL = 273,
-    tTYPE_STRING = 274,
-    tTYPE_INT = 275,
-    tTYPE_FLOAT = 276,
-    tVOID = 277,
-    tIF = 278,
-    tTHEN = 279,
-    tELSE = 280,
-    tWHILE = 281,
-    tDO = 282,
-    tBREAK = 283,
-    tCONTINUE = 284,
-    tREAD = 285,
-    tLEAVE = 286,
-    tRESTART = 287,
-    tFINALLY = 288,
-    tEQ = 291,
-    tUNARY = 292,
-    tUMINUS = 293
+    tARROW = 272,
+    tPUBLIC = 273,
+    tEXTERNAL = 274,
+    tTYPE_STRING = 275,
+    tTYPE_INT = 276,
+    tTYPE_FLOAT = 277,
+    tVOID = 278,
+    tIF = 279,
+    tTHEN = 280,
+    tELSE = 281,
+    tWHILE = 282,
+    tDO = 283,
+    tBREAK = 284,
+    tCONTINUE = 285,
+    tREAD = 286,
+    tLEAVE = 287,
+    tRESTART = 288,
+    tFINALLY = 289,
+    tEQ = 292,
+    tUNARY = 293,
+    tUMINUS = 294
   };
 #endif
 
@@ -109,7 +110,7 @@ union YYSTYPE
   fir::block_node       *block;
   fir::body_node       *body;
 
-#line 113 "fir_parser.tab.h" /* yacc.c:1909  */
+#line 114 "fir_parser.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

@@ -41,7 +41,7 @@
 %token<s> tSTRING tIDENTIFIER
 %token<expression> tNULL
 %token tNE tLE tGE tOR tAND tSIZEOF 
-%token tRETURN tWRITE tWRITELN
+%token tRETURN tWRITE tWRITELN tARROW
 %token tPUBLIC tEXTERNAL
 %token tTYPE_STRING tTYPE_INT tTYPE_FLOAT tVOID
 %token tIF tTHEN tELSE
@@ -60,8 +60,8 @@
 
 %type<s> string
 %type<node> instruction declaration vardec argdec fundef fundec
-%type<sequence> instructions opt_instructions file expressions opt_decs opt_expressions declarations vardecs opt_vardecs argdecs
-%type<expression> expression integer float opt_initializer
+%type<sequence> instructions opt_instructions file expressions opt_decs opt_expressions declarations /*vardecs opt_vardecs*/ argdecs
+%type<expression> expression integer float literal opt_initializer
 %type<type> data_type
 %type<lvalue> lvalue
 %type<block> block
@@ -94,13 +94,13 @@ vardec       : tEXTERNAL data_type  tIDENTIFIER        opt_initializer { $$ = ne
              |          data_type  tIDENTIFIER         opt_initializer { $$ = new fir::variable_declaration_node(LINE, tEXTERNAL, $1, *$2, $3); }
              ;
 
-vardecs      : vardec              { $$ = new cdk::sequence_node(LINE, $1);     }
+/*vardecs      : vardec            { $$ = new cdk::sequence_node(LINE, $1);     }
              | vardecs ';' vardec  { $$ = new cdk::sequence_node(LINE, $3, $1); }
-             ;
+             ;*/
              
-opt_vardecs  : /* empty */ { $$ = nullptr; }
+/*opt_vardecs  :*/ /* empty */ /*{ $$ = nullptr; }
              | vardecs     { $$ = $1; }
-             ;
+             ;*/
 
 data_type    : tTYPE_STRING                     { $$ = cdk::primitive_type::create(4, cdk::TYPE_STRING);  }
              | tTYPE_INT                        { $$ = cdk::primitive_type::create(4, cdk::TYPE_INT);     }
@@ -119,15 +119,15 @@ fundec   :          data_type  tIDENTIFIER '(' argdecs ')' { $$ = new fir::funct
          | data_type tPUBLIC tIDENTIFIER '(' argdecs ')' { $$ = new fir::function_declaration_node(LINE, tPUBLIC,  $1, *$3, $5); }
          ;
 
-fundef   : data_type  tIDENTIFIER '(' argdecs ')' "->" expression { $$ = new fir::function_definition_node(LINE, tEXTERNAL, *$2, $4, nullptr, new fir::return_node(LINE, $7)); }
-         | data_type tEXTERNAL tIDENTIFIER '(' argdecs ')' "->" expression { $$ = new fir::function_definition_node(LINE, tPUBLIC, *$3, $5, nullptr, new fir::return_node(LINE, $8)); }
-         | data_type tPUBLIC tIDENTIFIER '(' argdecs ')' "->" expression { $$ = new fir::function_definition_node(LINE, tPUBLIC, *$3, $5, nullptr, new fir::return_node(LINE, $8)); }
+fundef   : data_type  tIDENTIFIER '(' argdecs ')' tARROW literal { $$ = new fir::function_definition_node(LINE, tEXTERNAL, *$2, $4, nullptr, new fir::return_node(LINE, $7)); }
+         | data_type tEXTERNAL tIDENTIFIER '(' argdecs ')' tARROW literal { $$ = new fir::function_definition_node(LINE, tPUBLIC, *$3, $5, nullptr, new fir::return_node(LINE, $8)); }
+         | data_type tPUBLIC tIDENTIFIER '(' argdecs ')' tARROW literal { $$ = new fir::function_definition_node(LINE, tPUBLIC, *$3, $5, nullptr, new fir::return_node(LINE, $8)); }
          | data_type  tIDENTIFIER '(' argdecs ')' body { $$ = new fir::function_definition_node(LINE, tEXTERNAL, *$2, $4, $6, nullptr); }
          | data_type tEXTERNAL tIDENTIFIER '(' argdecs ')' body { $$ = new fir::function_definition_node(LINE, tPUBLIC, *$3, $5, $7, nullptr); }
          | data_type tPUBLIC tIDENTIFIER '(' argdecs ')' body { $$ = new fir::function_definition_node(LINE, tPUBLIC, *$3, $5, $7, nullptr); }
-         | data_type  tIDENTIFIER '(' argdecs ')' "->" expression body { $$ = new fir::function_definition_node(LINE, tEXTERNAL, *$2, $4, $8, new fir::return_node(LINE, $7)); }
-         | data_type tEXTERNAL tIDENTIFIER '(' argdecs ')' "->" expression body { $$ = new fir::function_definition_node(LINE, tPUBLIC, *$3, $5, $9, new fir::return_node(LINE, $8)); }
-         | data_type tPUBLIC tIDENTIFIER '(' argdecs ')' "->" expression body { $$ = new fir::function_definition_node(LINE, tPUBLIC, *$3, $5, $9, new fir::return_node(LINE, $8)); }
+         | data_type  tIDENTIFIER '(' argdecs ')' tARROW literal body { $$ = new fir::function_definition_node(LINE, tEXTERNAL, *$2, $4, $8, new fir::return_node(LINE, $7)); }
+         | data_type tEXTERNAL tIDENTIFIER '(' argdecs ')' tARROW literal body { $$ = new fir::function_definition_node(LINE, tPUBLIC, *$3, $5, $9, new fir::return_node(LINE, $8)); }
+         | data_type tPUBLIC tIDENTIFIER '(' argdecs ')' tARROW literal body { $$ = new fir::function_definition_node(LINE, tPUBLIC, *$3, $5, $9, new fir::return_node(LINE, $8)); }
          ; 
 
 body     : "@" block                    { $$ = new fir::body_node(LINE, $2, nullptr, nullptr); }
@@ -179,10 +179,7 @@ lvalue          : tIDENTIFIER                                            { $$ = 
                 | tIDENTIFIER '(' opt_expressions ')' '[' expression ']' { $$ = new fir::left_index_node(LINE, new fir::function_call_node(LINE, *$1, $3), $6); }
                 ;
 
-expression      : integer                       { $$ = $1; }
-                | float                          { $$ = $1; }
-                | string                        { $$ = new cdk::string_node(LINE, $1); }
-                | tNULL                         { $$ = new fir::null_node(LINE); }
+expression      : literal                       { $$ = $1; }
                 /* LEFT VALUES */
                 | lvalue                        { $$ = new cdk::rvalue_node(LINE, $1); }
                 /* ASSIGNMENTS */
@@ -223,6 +220,12 @@ expressions     : expression                     { $$ = new cdk::sequence_node(L
 
 opt_expressions : /* empty */         { $$ = new cdk::sequence_node(LINE); }
                 | expressions         { $$ = $1; }
+                ;
+
+literal         : integer                      { $$ = $1;}
+                | float                        { $$ = $1;}
+                | string                       { $$ = new cdk::string_node(LINE, $1); }
+                | tNULL                        { $$ = new fir :: null_node(LINE); }
                 ;
 
 integer         : tINTEGER                      { $$ = new cdk::integer_node(LINE, $1); };

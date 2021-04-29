@@ -80,9 +80,8 @@ IDENTIFIER   {LETTER}({LETTER}|[[:digit:]])*
 "finally"                     return tFINALLY;
 
   /* ====================================================================== */
-  /* ====[                 6 - Operadores de expressões               ]==== */
+  /* ====[                 Operadores de expressões                   ]==== */
   /* ====================================================================== */
-
 
 "=="                   return tEQ;
 "!="                   return tNE;
@@ -90,19 +89,18 @@ IDENTIFIER   {LETTER}({LETTER}|[[:digit:]])*
 ">="                   return tGE;
 "&&"                   return tAND;
 "||"                   return tOR;
-"@"                    return tREAD;
+"->"                   return tARROW;
 
   /* ====================================================================== */
-  /* ====[              3   - Delimitadores e separadores             ]==== */
-  /* ====[              4.3 - Corpo (de função)                       ]==== */
-  /* ====[                 5.3 - Instrução de retorno                 ]==== */
+  /* ====[              Delimitadores e separadores                   ]==== */
+  /* ====[              Corpo (de função)                             ]==== */
   /* ====================================================================== */
-"return"                       return tRETURN;
-"write"                        return tWRITE;
-"writeln"                      return tWRITELN;
+
+"writeln"			                return tWRITELN;
+"write"				                return tWRITE;
 
   /* ====================================================================== */
-  /* ====[                   2.7.1 - inteiros                         ]==== */
+  /* ====[                   inteiros                                 ]==== */
   /* ====================================================================== */
 
 <X_OCTAL>[[:digit:]]+      { yylval.i = strtoul(yytext, NULL, 8); yy_pop_state(); return tINTEGER; }
@@ -111,19 +109,19 @@ IDENTIFIER   {LETTER}({LETTER}|[[:digit:]])*
 {INT}                  yylval.i = strtoul(yytext, NULL, 10); return tINTEGER;
 
   /* ====================================================================== */
-  /* ====[                   2.7.2 - float                            ]==== */
+  /* ====[                   float                                    ]==== */
   /* ====================================================================== */
 
 ([0-9]*\.[0-9]+|[0-9]+\.[0-9]*)([eE][-+]?[0-9]+)? { yylval.d = strtod(yytext, NULL); return tFLOAT; }
 
   /* ====================================================================== */
-  /* ====[                2.6 - Identificadores (nomes)               ]==== */
+  /* ====[                Identificadores (nomes)                     ]==== */
   /* ====================================================================== */
 
 {IDENTIFIER}  yylval.s = new std::string(yytext); return tIDENTIFIER;
 
   /* ====================================================================== */
-  /* ====[              2.7.3 - Cadeias de caracteres                 ]==== */
+  /* ====[              Cadeias de caracteres                         ]==== */
   /* ====================================================================== */
 
 "~'"                           yy_push_state(X_STRING);
@@ -151,11 +149,9 @@ IDENTIFIER   {LETTER}({LETTER}|[[:digit:]])*
   /* ====[                    (other characters)                      ]==== */
   /* ====================================================================== */
 
+[-(){}\[\]<>=+*/%;,@~?\^]                return *yytext;
 [[:space:]]         /* ignore remaining white space inside the program */
 .                      yyerror(yytext);    /* all other chars: error! */
-[#\[\](){};:!,]        return *yytext;
-[\[\](),?]             return *yytext;
-[-+*/%~<>?=]           return *yytext;
 
   /* ====================================================================== */
   /* ====[                           THE END                          ]==== */
