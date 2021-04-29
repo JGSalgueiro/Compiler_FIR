@@ -83,8 +83,7 @@ IDENTIFIER   {LETTER}({LETTER}|[[:digit:]])*
   /* ====[                 6 - Operadores de expressões               ]==== */
   /* ====================================================================== */
 
-[\[\](),?]       return *yytext;
-[-+*/%~<>?=]        return *yytext;
+
 "=="                   return tEQ;
 "!="                   return tNE;
 "<="                   return tLE;
@@ -98,8 +97,6 @@ IDENTIFIER   {LETTER}({LETTER}|[[:digit:]])*
   /* ====[              4.3 - Corpo (de função)                       ]==== */
   /* ====[                 5.3 - Instrução de retorno                 ]==== */
   /* ====================================================================== */
-
-[#\[\](){};:!,]                return *yytext;
 "return"                       return tRETURN;
 "write"                        return tWRITE;
 "writeln"                      return tWRITELN;
@@ -156,6 +153,9 @@ IDENTIFIER   {LETTER}({LETTER}|[[:digit:]])*
 
 [[:space:]]         /* ignore remaining white space inside the program */
 .                      yyerror(yytext);    /* all other chars: error! */
+[#\[\](){};:!,]        return *yytext;
+[\[\](),?]             return *yytext;
+[-+*/%~<>?=]           return *yytext;
 
   /* ====================================================================== */
   /* ====[                           THE END                          ]==== */

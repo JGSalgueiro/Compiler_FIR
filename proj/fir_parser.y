@@ -60,7 +60,7 @@
 
 %type<s> string
 %type<node> instruction declaration vardec argdec fundef fundec
-%type<sequence> instructions opt_instructions file expressions opt_expressions declarations vardecs opt_vardecs argdecs
+%type<sequence> instructions opt_instructions file expressions opt_decs opt_expressions declarations vardecs opt_vardecs argdecs
 %type<expression> expression integer float opt_initializer
 %type<type> data_type
 %type<lvalue> lvalue
@@ -85,13 +85,17 @@ declaration  : vardec ';' { $$ = $1; }
              | fundef     { $$ = $1; }
              ;
 
+opt_decs  : /* empty */         { $$ = nullptr; }
+             | declarations     { $$ = $1; }
+             ;
+
 vardec       : tEXTERNAL data_type  tIDENTIFIER        opt_initializer { $$ = new fir::variable_declaration_node(LINE, tEXTERNAL,  $2, *$3, nullptr); }
              | tPUBLIC  data_type  tIDENTIFIER         opt_initializer { $$ = new fir::variable_declaration_node(LINE, tPUBLIC,  $2, *$3, $4); }
              |          data_type  tIDENTIFIER         opt_initializer { $$ = new fir::variable_declaration_node(LINE, tEXTERNAL, $1, *$2, $3); }
              ;
 
-vardecs      : vardec ';'          { $$ = new cdk::sequence_node(LINE, $1);     }
-             | vardecs vardec ';'  { $$ = new cdk::sequence_node(LINE, $2, $1); }
+vardecs      : vardec              { $$ = new cdk::sequence_node(LINE, $1);     }
+             | vardecs ';' vardec  { $$ = new cdk::sequence_node(LINE, $3, $1); }
              ;
              
 opt_vardecs  : /* empty */ { $$ = nullptr; }
@@ -143,7 +147,7 @@ argdecs  : /* empty */         { $$ = new cdk::sequence_node(LINE);  }
 argdec   : data_type tIDENTIFIER { $$ = new fir::variable_declaration_node(LINE, tEXTERNAL, $1, *$2, nullptr); }
         ;
 
-block    : '{' opt_vardecs opt_instructions '}' { $$ = new fir::block_node(LINE, $2, $3); }
+block    : '{' opt_decs opt_instructions '}' { $$ = new fir::block_node(LINE, $2, $3); }
          ;
 
 instructions    : instruction                { $$ = new cdk::sequence_node(LINE, $1);     }
