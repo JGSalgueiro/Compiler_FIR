@@ -60,8 +60,8 @@
 
 %type<s> string
 %type<node> instruction declaration vardec argdec fundef fundec
-%type<sequence> instructions opt_instructions file expressions opt_decs opt_expressions declarations /*vardecs opt_vardecs*/ argdecs
-%type<expression> expression integer float literal opt_initializer
+%type<sequence> instructions optional_instructions file expressions optional_expressions optional_decs declarations argdecs
+%type<expression> expression integer float optional_initializer literal 
 %type<type> data_type
 %type<lvalue> lvalue
 %type<block> block
@@ -80,27 +80,20 @@ declarations :              declaration { $$ = new cdk::sequence_node(LINE, $1);
              | declarations declaration { $$ = new cdk::sequence_node(LINE, $2, $1); }
              ;
 
+
 declaration  : vardec ';' { $$ = $1; }
              | fundec     { $$ = $1; }
              | fundef     { $$ = $1; }
              ;
 
-opt_decs  : /* empty */         { $$ = nullptr; }
-             | declarations     { $$ = $1; }
-             ;
+optional_decs  : /* empty */         { $$ = nullptr; }
+               | declarations        { $$ = $1; }
+               ;
 
-vardec       : data_type tEXTERNAL  tIDENTIFIER   opt_initializer { $$ = new fir::variable_declaration_node(LINE, tEXTERNAL,  $1, *$3, nullptr); }
-             | data_type '*'  tIDENTIFIER         opt_initializer { $$ = new fir::variable_declaration_node(LINE, '*',  $1, *$3, $4); }
-             | data_type  tIDENTIFIER             opt_initializer { $$ = new fir::variable_declaration_node(LINE, tEXTERNAL, $1, *$2, $3); }
+vardec       : data_type tEXTERNAL  tIDENTIFIER   optional_initializer { $$ = new fir::variable_declaration_node(LINE, tEXTERNAL,  $1, *$3, nullptr); }
+             | data_type '*'  tIDENTIFIER         optional_initializer { $$ = new fir::variable_declaration_node(LINE, '*',  $1, *$3, $4); }
+             | data_type  tIDENTIFIER             optional_initializer { $$ = new fir::variable_declaration_node(LINE, tEXTERNAL, $1, *$2, $3); }
              ;
-
-/*vardecs      : vardec            { $$ = new cdk::sequence_node(LINE, $1);     }
-             | vardecs ';' vardec  { $$ = new cdk::sequence_node(LINE, $3, $1); }
-             ;*/
-             
-/*opt_vardecs  :*/ /* empty */ /*{ $$ = nullptr; }
-             | vardecs     { $$ = $1; }
-             ;*/
 
 data_type    : tTYPE_STRING                     { $$ = cdk::primitive_type::create(4, cdk::TYPE_STRING);  }
              | tTYPE_INT                        { $$ = cdk::primitive_type::create(4, cdk::TYPE_INT);     }
@@ -110,7 +103,7 @@ data_type    : tTYPE_STRING                     { $$ = cdk::primitive_type::crea
              | t3SETAST data_type t3SETASF      { $$ = cdk::reference_type::create(4, nullptr); }
              ;
        
-opt_initializer  : /* empty */         { $$ = nullptr; /* must be nullptr, not NIL */ }
+optional_initializer  : /* empty */         { $$ = nullptr; /* must be nullptr, not NIL */ }
                  | '=' expression      { $$ = $2; }
                  ;
 
@@ -134,7 +127,15 @@ fundef   : data_type  tIDENTIFIER '(' argdecs ')' tARROW literal { $$ = new fir:
          | data_type  tIDENTIFIER '(' argdecs ')' body { $$ = new fir::function_definition_node(LINE, tEXTERNAL,$1, *$2, $4, $6, nullptr); }
          | data_type tEXTERNAL tIDENTIFIER '(' argdecs ')' body { $$ = new fir::function_definition_node(LINE, '*',$1, *$3, $5, $7, nullptr); }
          | data_type '*' tIDENTIFIER '(' argdecs ')' body { $$ = new fir::function_definition_node(LINE, '*',$1, *$3, $5, $7, nullptr); }
-         ; 
+         ;        
+
+argdecs  : /* empty */         { $$ = new cdk::sequence_node(LINE);  }
+         |             argdec  { $$ = new cdk::sequence_node(LINE, $1);     }
+         | argdecs ',' argdec  { $$ = new cdk::sequence_node(LINE, $3, $1); }
+         ;
+
+argdec   : data_type tIDENTIFIER { $$ = new fir::variable_declaration_node(LINE, tEXTERNAL, $1, *$2, nullptr); }
+         ;
 
 body     : '@' block                    { $$ = new fir::body_node(LINE, $2, nullptr, nullptr); }
          | '@' block t2SETASF block         { $$ = new fir::body_node(LINE, $2, nullptr, $4); }
@@ -143,35 +144,27 @@ body     : '@' block                    { $$ = new fir::body_node(LINE, $2, null
          | t2SETASF block                   { $$ = new fir::body_node(LINE, nullptr, nullptr, $2); }
          | block t2SETASF block             { $$ = new fir::body_node(LINE, nullptr, $1, $3); }
          | block                        { $$ = new fir::body_node(LINE, nullptr, $1, nullptr); }
-         ;       
-
-argdecs  : /* empty */         { $$ = new cdk::sequence_node(LINE);  }
-         |             argdec  { $$ = new cdk::sequence_node(LINE, $1);     }
-         | argdecs ',' argdec  { $$ = new cdk::sequence_node(LINE, $3, $1); }
          ;
 
-argdec   : data_type tIDENTIFIER { $$ = new fir::variable_declaration_node(LINE, tEXTERNAL, $1, *$2, nullptr); }
-        ;
-
-block    : '{' opt_decs opt_instructions '}' { $$ = new fir::block_node(LINE, $2, $3); }
+block    : '{' optional_decs optional_instructions '}' { $$ = new fir::block_node(LINE, $2, $3); }
          ;
+
+optional_instructions: /* empty */  { $$ = new cdk::sequence_node(LINE); }
+                       | instructions { $$ = $1; }
+                       ;
 
 instructions    : instruction                { $$ = new cdk::sequence_node(LINE, $1);     }
                 | instructions instruction   { $$ = new cdk::sequence_node(LINE, $2, $1); }
                 ;
 
-opt_instructions: /* empty */  { $$ = new cdk::sequence_node(LINE); }
-                | instructions { $$ = $1; }
-                ;
-
 instruction     : expression ';'                                                            { $$ = new fir::evaluation_node(LINE, $1); }
-                | tWRITE expressions ';'                                                  { $$ = new fir::write_node(LINE, $2, false); }
+                | tWRITE expressions ';'                                                    { $$ = new fir::write_node(LINE, $2, false); }
                 | tWRITELN expressions ';'                                                  { $$ = new fir::write_node(LINE, $2, true); }
                 | tLEAVE ';'                                                                { $$ = new fir::leave_node(LINE); }
-                | tLEAVE expression ';'                                                        { $$ = new fir::leave_node(LINE, $2); }
-                | tRESTART ';'                                                                { $$ = new fir::restart_node(LINE); }
-                | tRESTART expression ';'                                                        { $$ = new fir::restart_node(LINE, $2); }   
-                | tRETURN                                                                    { $$ = new fir::return_node(LINE, nullptr); }
+                | tLEAVE expression ';'                                                     { $$ = new fir::leave_node(LINE, $2); }
+                | tRESTART ';'                                                              { $$ = new fir::restart_node(LINE); }
+                | tRESTART expression ';'                                                   { $$ = new fir::restart_node(LINE, $2); }   
+                | tRETURN                                                                   { $$ = new fir::return_node(LINE, nullptr); }
                 | tIF expression tTHEN instruction                                          { $$ = new fir::if_node(LINE, $2, $4); }
                 | tIF expression tTHEN instruction tELSE instruction                        { $$ = new fir::if_else_node(LINE, $2, $4, $6); }
                 | tWHILE expression tDO instruction                                         { $$ = new fir::while_node(LINE, $2, $4); }
@@ -182,7 +175,7 @@ instruction     : expression ';'                                                
 lvalue          : tIDENTIFIER                                            { $$ = new cdk::variable_node(LINE, *$1); delete $1; }
                 | lvalue '[' expression ']'                              { $$ = new fir::left_index_node(LINE, new cdk::rvalue_node(LINE, $1), $3); }
                 | '(' expression ')' '[' expression ']'                  { $$ = new fir::left_index_node(LINE, $2, $5); }
-                | tIDENTIFIER '(' opt_expressions ')' '[' expression ']' { $$ = new fir::left_index_node(LINE, new fir::function_call_node(LINE, *$1, $3), $6); }
+                | tIDENTIFIER '(' optional_expressions ')' '[' expression ']' { $$ = new fir::left_index_node(LINE, new fir::function_call_node(LINE, *$1, $3), $6); }
                 ;
 
 expression      : literal                       { $$ = $1; }
@@ -211,7 +204,7 @@ expression      : literal                       { $$ = $1; }
                 | '+' expression %prec tUMINUS  { $$ = $2; }
                 | '~' expression                { $$ = new cdk::not_node(LINE, $2); }
                 /* OTHER EXPRESSION */
-                | tIDENTIFIER '(' opt_expressions ')'   { $$ = new fir::function_call_node(LINE, *$1, $3); delete $1; }
+                | tIDENTIFIER '(' optional_expressions ')'   { $$ = new fir::function_call_node(LINE, *$1, $3); delete $1; }
                 | tSIZEOF '(' expression ')'   { $$ = new fir::sizeof_node(LINE, $3); }
                 | '@'                      { $$ = new fir::read_node(LINE); }
                 /* OTHER EXPRESSION */
@@ -220,12 +213,12 @@ expression      : literal                       { $$ = $1; }
                 | lvalue '?'                    { $$ = new fir::address_of_node(LINE, $1); }
                 ;
 
+optional_expressions : /* empty */         { $$ = new cdk::sequence_node(LINE); }
+                     | expressions         { $$ = $1; }
+                     ;
+
 expressions     : expression                     { $$ = new cdk::sequence_node(LINE, $1);     }
                 | expressions ',' expression     { $$ = new cdk::sequence_node(LINE, $3, $1); }
-                ;
-
-opt_expressions : /* empty */         { $$ = new cdk::sequence_node(LINE); }
-                | expressions         { $$ = $1; }
                 ;
 
 literal         : integer                      { $$ = $1;}
