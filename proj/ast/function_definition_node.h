@@ -31,7 +31,7 @@ namespace fir {
     inline int qualifier() {
       return _qualifier;
     }
-    inline std::string &identifie(){
+    inline std::string &identifier(){
       return _identifier;
     }
     

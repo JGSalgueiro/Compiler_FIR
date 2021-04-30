@@ -1,15 +1,9 @@
 #include <string>
 #include "targets/xml_writer.h"
 #include "targets/type_checker.h"
+#include "targets/symbol.h"
 #include "ast/all.h"  // automatically generated
 
-/*static std::string qualifier_name(int qualifier) {
-  if (qualifier == tPUBLIC) return "public";
-  if (qualifier == tPRIVATE)
-    return "private";
-  else
-    return "unknown qualifier";
-}*/
 
 //---------------------------------------------------------------------------
 
@@ -164,7 +158,7 @@ void fir::xml_writer::do_read_node(fir::read_node * const node, int lvl) {
 
 void fir::xml_writer::do_while_node(fir::while_node * const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS;
-  openTag(node, lvl);
+  os() << std::string(lvl, ' ') << "<" << node->label() << ">" << std::endl;
   openTag("condition", lvl + 2);
   node->condition()->accept(this, lvl + 4);
   closeTag("condition", lvl + 2);
@@ -311,7 +305,8 @@ void fir::xml_writer::do_body_node(fir::body_node *const node, int lvl) {
 
 void fir::xml_writer::do_function_definition_node(fir::function_definition_node *const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS
-  openTag(node, lvl);
+  os() << std::string(lvl, ' ') << "<" << node->label() << " name='" << node->identifier() << "' qualifier='"
+      << node->qualifier() << "' type='" << cdk::to_string(node->type()) << "'>" << std::endl;
   openTag("arguments", lvl + 2);
   node->arguments()->accept(this, lvl + 4);
   closeTag("arguments", lvl + 2);
@@ -326,7 +321,7 @@ void fir::xml_writer::do_function_definition_node(fir::function_definition_node 
 
 void fir::xml_writer::do_function_call_node(fir::function_call_node *const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS
-  openTag(node, lvl);
+  os() << std::string(lvl, ' ') << "<" << node->label() << " name='" << node->identifier() << "'>" << std::endl;
   openTag("arguments", lvl + 2);
   node->arguments()->accept(this, lvl + 4);
   closeTag("arguments", lvl + 2);
@@ -335,7 +330,8 @@ void fir::xml_writer::do_function_call_node(fir::function_call_node *const node,
 
 void fir::xml_writer::do_function_declaration_node(fir::function_declaration_node *const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS
-  openTag(node, lvl);
+  os() << std::string(lvl, ' ') << "<" << node->label() << " name='" << node->identifier() << "' qualifier='"
+      << node->qualifier() << "' type='" << cdk::to_string(node->type()) << "'>" << std::endl;
   openTag("arguments", lvl + 2);
   node->arguments()->accept(this, lvl + 4);
   closeTag("arguments", lvl + 2);
@@ -344,7 +340,8 @@ void fir::xml_writer::do_function_declaration_node(fir::function_declaration_nod
 
 void fir::xml_writer::do_variable_declaration_node(fir::variable_declaration_node *const node, int lvl) {
   ASSERT_SAFE_EXPRESSIONS
-  openTag(node, lvl);
+  os() << std::string(lvl, ' ') << "<" << node->label() << " name='" << node->identifier() << "' qualifier='"
+      << node->qualifier() << "' type='" << cdk::to_string(node->type()) << "'>" << std::endl;
   openTag("initializer", lvl + 2);
   node->initializer()->accept(this, lvl + 4);
   closeTag("initializer", lvl + 2);
