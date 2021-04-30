@@ -16,7 +16,8 @@ namespace fir {
 
   public:
     inline while_node(int lineno, cdk::expression_node *condition, cdk::basic_node *block) :
-        basic_node(lineno), _condition(condition), _block(block) { //TODO FIXNOW initialize
+        basic_node(lineno), _condition(condition), _block(block) { 
+        _finally = 0;// Defines that finnaly is a null pointer
     }
 
     inline while_node(int lineno, cdk::expression_node *condition, cdk::basic_node *block, cdk::basic_node *finally) :
