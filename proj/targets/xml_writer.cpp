@@ -4,6 +4,10 @@
 #include "targets/symbol.h"
 #include "ast/all.h"  // automatically generated
 
+std::string boolToStr(bool val) {
+     if (val) return "true";
+      return "false";
+    }
 
 //---------------------------------------------------------------------------
 
@@ -140,7 +144,7 @@ void fir::xml_writer::do_evaluation_node(fir::evaluation_node * const node, int 
 
 void fir::xml_writer::do_write_node(fir::write_node *const node, int lvl) {
   //ASSERT_SAFE_EXPRESSIONS
-  openTag(node, lvl);
+  os() << std::string(lvl, ' ') << "<" << node->label()<< " Write line: " << boolToStr(node->isWriteln()) << ">" <<  std::endl;
   node->argument()->accept(this, lvl + 2);
   closeTag(node, lvl);
 }
@@ -257,7 +261,6 @@ void fir::xml_writer::do_block_node(fir::block_node *const node, int lvl) {
 void fir::xml_writer::do_sizeof_node(fir::sizeof_node *const node, int lvl) {
   //ASSERT_SAFE_EXPRESSIONS
   openTag(node, lvl);
-  node->argument()->accept(this, lvl + 2);
   closeTag(node, lvl);
 }
 
